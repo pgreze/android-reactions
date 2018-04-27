@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="reactions_item_size">24dp</dimen>
+    <dimen name="reactions_item_margin">8dp</dimen>
+    <public />
+</resources>

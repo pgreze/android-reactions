@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    minSdk = min_sdk.toInteger()
+    targetSdk = target_sdk.toInteger()
+}
+
+ext.deps = [
+        kotlin: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+        support: "com.android.support:support-compat:$support_library_version",
+        appcompat: "com.android.support:appcompat-v7:$support_library_version"
+]
