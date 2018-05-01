@@ -34,11 +34,11 @@ public class MainActivity extends AppCompatActivity {
         setup(R.id.crypto_btn, new ReactionsConfigBuilder(this)
                 .setReactions(new int[]{
                         R.drawable.ic_crypto_btc,
+                        R.drawable.ic_crypto_eth,
                         R.drawable.ic_crypto_ltc,
                         R.drawable.ic_crypto_dash,
                         R.drawable.ic_crypto_xrp,
                         R.drawable.ic_crypto_xmr,
-                        R.drawable.ic_crypto_usdt,
                         R.drawable.ic_crypto_doge,
                         R.drawable.ic_crypto_steem,
                         R.drawable.ic_crypto_kmd,

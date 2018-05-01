@@ -27,7 +27,6 @@ class ReactionView constructor(
         }
 
     init {
-        scaleType = ImageView.ScaleType.FIT_XY
         setImageDrawable(reaction.image)
     }
 
