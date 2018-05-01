@@ -69,7 +69,7 @@ class ReactionPopup(context: Context, reactionsConfig: ReactionsConfig)
             view.onTouchEvent(event)
         }
 
-        return false
+        return true
     }
 
     private fun MotionEvent.inInsideView(location: Point, v: View): Boolean =
