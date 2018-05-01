@@ -1,0 +1,27 @@
+// See:
+// https://github.com/codepath/android_guides/wiki/Building-your-own-Android-library
+// For gradle config:
+// https://inthecheesefactory.com/blog/how-to-upload-library-to-jcenter-maven-central-as-dependency/en
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'android-reactions'
+
+    publishedGroupId = 'io.zla'
+    libraryName = 'Android Reactions'
+    artifact = 'android-reactions'
+
+    libraryDescription = 'A Facebook like reactions picker for Android'
+
+    siteUrl = 'https://github.com/zla-io/android-reactions'
+    gitUrl = 'https://github.com/zla-io/android-reactions.git'
+
+    libraryVersion = version_name
+
+    developerId = 'pgreze'
+    developerName = 'Pierrick Greze'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}

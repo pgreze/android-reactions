@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply from: '../gradle/publish.gradle'
 
 android {
     compileSdkVersion targetSdk
@@ -20,3 +21,6 @@ dependencies {
     implementation deps.kotlin
     api deps.support
 }
+
+apply from: '../gradle/install.gradle'
+apply from: '../gradle/bintray.gradle'
