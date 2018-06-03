@@ -13,10 +13,10 @@ import android.view.ViewGroup
 import java.util.*
 
 /**
- * This ViewGroup displays the Reactions and handles interactions with them.
+ * This ViewGroup displays Reactions and handles interactions with them.
  *
- * This ViewGroup should most often be used within a ReactionPopup
- * and given match_parent height and width attributes to properly draw the View.
+ * It should most often be used within a ReactionPopup
+ * and given height and width attributes as match_parent to properly draw the View.
  */
 @SuppressLint("ViewConstructor")
 class ReactionViewGroup(context: Context, private val config: ReactionsConfig) : ViewGroup(context) {
@@ -43,7 +43,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     private var dialogY: Int = 0
     private var cornerSize: Int = 0
 
-    private var firstLayout = true
+    private var isFirstLayout = true
 
     private val background = RoundedView(context, config)
     private val reactions: List<ReactionView>
@@ -113,7 +113,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         // If there are small icon sizes adjust the height of the background to them
         background.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
 
-        // To animate the size changes
+        // Animate size changes for each view
         animators.clear()
         loop@ for (i in 0 until childCount) {
             val view = getChildAt(i)
@@ -126,7 +126,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                         ReactionView.Mode.LARGE -> largeIconSize
                     }
 
-                    if (firstLayout) {
+                    if (isFirstLayout) {
                         layoutIconView(view, targetSize.toFloat())
                         continue@loop
                     }
@@ -143,7 +143,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                         dialogY
                     }.toFloat()
 
-                    if (firstLayout) {
+                    if (isFirstLayout) {
                         layoutRoundedView(view, top)
                         continue@loop
                     }
@@ -156,25 +156,25 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
             })
         }
 
-        if (!firstLayout) {
+        if (!isFirstLayout) {
             AnimatorSet().apply {
                 playTogether(animators)
                 duration = 100
             }.start()
         }
-        firstLayout = false
+        isFirstLayout = false
     }
 
-    private fun layoutIconView(view: ReactionView, v: Float) {
+    private fun layoutIconView(view: ReactionView, targetSize: Float) {
         // Slow, think of another way to do this
         var prevX = 0
         for (i in 1 until indexOfChild(view)) {
             prevX += getChildAt(i).width + iconDivider
         }
         val bottom = dialogY + dialogHeight - verticalPadding
-        val top = (bottom - v).toInt()
+        val top = (bottom - targetSize).toInt()
         val left = dialogX - mediumIconSize / 2 + prevX
-        val right = (left + v).toInt()
+        val right = (left + targetSize).toInt()
         view.layout(left, top, right, bottom)
     }
 
