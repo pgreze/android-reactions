@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import io.zla.reactions.sample.R;
 import io.zla.reactions.ReactionPopup;
 import io.zla.reactions.ReactionsConfig;
 import io.zla.reactions.ReactionsConfigBuilder;
