@@ -26,9 +26,10 @@ class ReactionPopup(context: Context, reactionsConfig: ReactionsConfig)
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER)
 
-        it.reactionSelectedListener = ReactionSelectedListener { reaction, position ->
-            dismiss()
-            reactionSelectedListener?.onReactionSelected(reaction, position)
+        it.reactionSelectedListener = { reaction, position ->
+            reactionSelectedListener?.invoke(reaction, position)?.also { shouldClose ->
+                if (shouldClose) dismiss()
+            } ?: false
         }
     }
     private var isTouchAlwaysInsideButton = true

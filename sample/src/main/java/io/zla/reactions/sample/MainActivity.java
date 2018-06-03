@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 300);
             toast.show();
+            // Close selector if not invalid item (for testing this feature)
+            return position != 3;
         });
 
         findViewById(btnId).setOnTouchListener(reactionPopup);

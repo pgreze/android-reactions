@@ -7,6 +7,14 @@ import android.support.annotation.ColorInt
 import android.support.annotation.Px
 import android.support.v4.content.ContextCompat
 
+/**
+ * Selected reaction callback.
+ * @param reaction selected item, or null if no selection.
+ * @param position selected item position, or -1.
+ * @return if this selection should end reaction selector.
+ */
+typealias ReactionSelectedListener = (reaction: Reaction?, position: Int) -> Boolean
+
 data class Reaction(val image: Drawable)
 
 data class ReactionsConfig(

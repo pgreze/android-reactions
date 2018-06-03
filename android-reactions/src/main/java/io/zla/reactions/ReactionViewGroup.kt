@@ -206,8 +206,11 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
             MotionEvent.ACTION_UP -> {
                 val reaction = getIntersectedIcon(event.rawX, event.rawY)?.reaction
                 val position = reaction?.let { config.reactions.indexOf(it) } ?: -1
-                reactionSelectedListener?.onReactionSelected(reaction, position)
-                dismiss()
+                if (reactionSelectedListener?.invoke(reaction, position) == true) {
+                    dismiss()
+                } else {
+                    resetChildrenToNormalSize()
+                }
             }
             MotionEvent.ACTION_CANCEL -> resetChildrenToNormalSize()
         }
