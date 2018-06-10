@@ -49,7 +49,6 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     private val reactions: List<ReactionView>
 
     init {
-        layoutTransition = ReactionLayoutTransition()
         // Add background
         addView(background)
         // Add all reactions
