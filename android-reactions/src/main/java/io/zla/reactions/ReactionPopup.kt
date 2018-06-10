@@ -20,28 +20,33 @@ class ReactionPopup(context: Context, reactionsConfig: ReactionsConfig)
 
     var reactionSelectedListener: ReactionSelectedListener? = null
 
-    private var view: ReactionViewGroup = ReactionViewGroup(context, reactionsConfig).also {
-        it.layoutParams = FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                Gravity.CENTER)
+    private val rootView = FrameLayout(context).also {
+        it.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT)
+    }
+    private val view: ReactionViewGroup by lazy(LazyThreadSafetyMode.NONE) {
+        // Lazily inflate content during first display
+        ReactionViewGroup(context, reactionsConfig).also {
+            it.layoutParams = FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER)
 
-        it.reactionSelectedListener = { reaction, position ->
-            reactionSelectedListener?.invoke(reaction, position)?.also { shouldClose ->
-                if (shouldClose) dismiss()
-            } ?: false
+            it.reactionSelectedListener = { reaction, position ->
+                reactionSelectedListener?.invoke(reaction, position)?.also { shouldClose ->
+                    if (shouldClose) dismiss()
+                } ?: false
+            }
+
+            rootView.addView(it)
         }
     }
     private var isTouchAlwaysInsideButton = true
     private var buttonLocation = Point()
 
     init {
-        contentView = FrameLayout(context).also { rootLayout ->
-            rootLayout.layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT)
-            rootLayout.addView(view)
-        }
+        contentView = rootView
         width = ViewGroup.LayoutParams.MATCH_PARENT
         height = ViewGroup.LayoutParams.MATCH_PARENT
         isFocusable = true

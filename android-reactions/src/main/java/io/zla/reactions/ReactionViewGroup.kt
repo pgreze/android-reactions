@@ -189,6 +189,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         this.parentLocation = parentLocation
         parentHeight = parent.height
         visibility = View.VISIBLE
+        // TODO: appear effect after visibility change
         resetChildrenToNormalSize()
     }
 
@@ -224,6 +225,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     fun dismiss() {
         parentLocation.set(0, 0)
         parentHeight = 0
+        // TODO: Disappear effect before change visibility to gone
         visibility = View.GONE
     }
 
