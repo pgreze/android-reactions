@@ -21,6 +21,6 @@ android {
 }
 
 dependencies {
-    implementation project(':android-reactions')
+    implementation project(':library')
     implementation deps.appcompat
 }

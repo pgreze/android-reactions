@@ -9,6 +9,7 @@ android {
         targetSdkVersion targetSdk
         versionCode 1
         versionName version_name
+        archivesBaseName = artifact
     }
     buildTypes {
         release {

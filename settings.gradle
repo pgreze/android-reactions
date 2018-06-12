@@ -1,2 +1,4 @@
-rootProject.name = 'android-reactions-root'
-include ':android-reactions', ':sample'
+rootProject.name = 'android-reactions'
+
+include ':library'
+include ':sample'
