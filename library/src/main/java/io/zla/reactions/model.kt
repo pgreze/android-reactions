@@ -107,7 +107,7 @@ class ReactionsConfigBuilder(private val context: Context) {
                     verticalMargin = verticalMargin,
                     reactionTextProvider = reactionTextProvider,
                     textBackground = textBackground
-                            ?: ContextCompat.getDrawable(context, R.drawable.reaction_text_background)!!,
+                            ?: ContextCompat.getDrawable(context, R.drawable.reactions_text_background)!!,
                     textColor = textColor ?: Color.WHITE,
                     textHorizontalPadding = textHorizontalPadding
                             ?: context.resources.getDimension(R.dimen.reactions_text_horizontal_padding).roundToInt(),

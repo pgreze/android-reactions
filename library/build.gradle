@@ -11,6 +11,7 @@ android {
         versionName version_name
         archivesBaseName = artifact
     }
+    resourcePrefix 'reactions_'
     buildTypes {
         release {
             minifyEnabled false
