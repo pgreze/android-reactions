@@ -3,9 +3,11 @@ package io.zla.reactions
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.support.annotation.ArrayRes
 import android.support.annotation.ColorInt
 import android.support.annotation.Px
 import android.support.v4.content.ContextCompat
+import kotlin.math.roundToInt
 
 /**
  * Selected reaction callback.
@@ -15,6 +17,13 @@ import android.support.v4.content.ContextCompat
  */
 typealias ReactionSelectedListener = (reaction: Reaction?, position: Int) -> Boolean
 
+/**
+ * Reaction text provider.
+ * @param position position of current selected item in [ReactionsConfig.reactions]
+ * @return optional reaction text, null for no text
+ */
+typealias ReactionTextProvider = (position: Int) -> CharSequence?
+
 data class Reaction(val image: Drawable)
 
 data class ReactionsConfig(
@@ -22,12 +31,18 @@ data class ReactionsConfig(
         @Px val reactionSize: Int,
         @Px val horizontalMargin: Int,
         @Px val verticalMargin: Int,
-        @ColorInt val popupColor: Int
+        @ColorInt val popupColor: Int,
+        val reactionTextProvider: ReactionTextProvider?,
+        val textBackground: Drawable,
+        @ColorInt val textColor: Int,
+        val textHorizontalPadding: Int,
+        val textVerticalPadding: Int,
+        val textSize: Float
 )
 
 // TODO: use https://kotlinlang.org/docs/reference/type-safe-builders.html
 class ReactionsConfigBuilder(private val context: Context) {
-    private var _reactions: Collection<Reaction>? = null
+    private var reactions: Collection<Reaction>? = null
     @Px var reactionSize: Int =
             context.resources.getDimensionPixelSize(R.dimen.reactions_item_size)
         private set
@@ -36,13 +51,25 @@ class ReactionsConfigBuilder(private val context: Context) {
         private set
     @Px var verticalMargin: Int = horizontalMargin
         private set
-    @ColorInt private var _popupColor: Int = Color.WHITE
+    @ColorInt private var popupColor: Int? = null
+    private var reactionTextProvider: ReactionTextProvider? = null
+    private var textBackground: Drawable? = null
+    @ColorInt private var textColor: Int? = null
+    private var textHorizontalPadding: Int? = null
+    private var textVerticalPadding: Int? = null
+    private var textSize: Float? = null
 
     fun setReactions(drawables: Collection<Drawable>): ReactionsConfigBuilder =
-            this.also { _reactions = drawables.map(::Reaction) }
+            this.also { this.reactions = drawables.map { Reaction(it) } }
 
     fun setReactions(res: IntArray): ReactionsConfigBuilder =
             setReactions(res.map { ContextCompat.getDrawable(context, it)!! })
+
+    fun setReactionTexts(reactionTextProvider: ReactionTextProvider?): ReactionsConfigBuilder =
+            this.also { this.reactionTextProvider = reactionTextProvider }
+
+    fun setReactionTexts(@ArrayRes res: Int): ReactionsConfigBuilder =
+            this.also { reactionTextProvider = context.resources.getStringArray(res)::get }
 
     fun setReactionSize(size: Int): ReactionsConfigBuilder =
             this.also { reactionSize = size }
@@ -54,14 +81,39 @@ class ReactionsConfigBuilder(private val context: Context) {
             this.also { verticalMargin = margin }
 
     fun setPopupColor(@ColorInt popupColor: Int): ReactionsConfigBuilder =
-            this.also { _popupColor = popupColor }
+            this.also { this.popupColor = popupColor }
+
+    fun setTextBackground(textBackground: Drawable): ReactionsConfigBuilder =
+            this.also { this.textBackground = textBackground }
+
+    fun setTextColor(@ColorInt textColor: Int): ReactionsConfigBuilder =
+            this.also { this.textColor = textColor }
+
+    fun setTextHorizontalPadding(textHorizontalPadding: Int): ReactionsConfigBuilder =
+            this.also { this.textHorizontalPadding = textHorizontalPadding }
+
+    fun setTextVerticalPadding(textVerticalPadding: Int): ReactionsConfigBuilder =
+            this.also { this.textVerticalPadding = textVerticalPadding }
+
+    fun setTextSize(textSize: Float): ReactionsConfigBuilder =
+            this.also { this.textSize = textSize }
 
     fun build(): ReactionsConfig =
             ReactionsConfig(
-                    reactions = _reactions ?: throw NullPointerException("Empty reactions"),
-                    popupColor = _popupColor,
+                    reactions = reactions ?: throw NullPointerException("Empty reactions"),
+                    popupColor = popupColor ?: Color.WHITE,
                     reactionSize = reactionSize,
                     horizontalMargin = horizontalMargin,
-                    verticalMargin = verticalMargin
+                    verticalMargin = verticalMargin,
+                    reactionTextProvider = reactionTextProvider,
+                    textBackground = textBackground
+                            ?: ContextCompat.getDrawable(context, R.drawable.reaction_text_background)!!,
+                    textColor = textColor ?: Color.WHITE,
+                    textHorizontalPadding = textHorizontalPadding
+                            ?: context.resources.getDimension(R.dimen.reactions_text_horizontal_padding).roundToInt(),
+                    textVerticalPadding = textVerticalPadding
+                            ?: context.resources.getDimension(R.dimen.reactions_text_vertical_padding).roundToInt(),
+                    textSize = textSize
+                            ?: context.resources.getDimension(R.dimen.reactions_text_size)
             )
 }

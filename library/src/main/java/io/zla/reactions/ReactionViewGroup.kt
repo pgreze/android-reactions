@@ -9,6 +9,8 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import kotlin.math.roundToInt
 
 /**
  * This ViewGroup displays Reactions and handles interactions with them.
@@ -65,6 +67,19 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                 }
             }
             .toList()
+    private val reactionText: TextView = TextView(context)
+            .also {
+                it.textSize = config.textSize
+                it.setTextColor(config.textColor)
+                it.setPadding(
+                        config.textHorizontalPadding,
+                        config.textVerticalPadding,
+                        config.textHorizontalPadding,
+                        config.textVerticalPadding)
+                it.background = config.textBackground
+                it.visibility = View.GONE
+                addView(it)
+            }
 
     private var dialogX: Int = 0
     private var dialogY: Int = 0
@@ -86,7 +101,9 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     private var currentAnimator: ValueAnimator? = null
         set(value) {
             field?.cancel()
+
             field = value
+            reactionText.visibility = View.GONE
             field?.duration = 100
             field?.start()
         }
@@ -140,6 +157,16 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
             view.layout(left, top, right, bottom)
 
             prevX += view.width + iconDivider
+        }
+
+        if (reactionText.visibility == View.VISIBLE) {
+            reactionText.measure(0, 0)
+            val selectedView = (currentState as? ReactionViewState.Selected)?.view ?: return
+            val top = selectedView.top - Math.min(selectedView.layoutParams.size, reactionText.measuredHeight * 2)
+            val bottom = top + reactionText.measuredHeight
+            val left = selectedView.left + (selectedView.right - selectedView.left) / 2f - reactionText.measuredWidth / 2f
+            val right = left + reactionText.measuredWidth
+            reactionText.layout(left.toInt(), top, right.toInt(), bottom)
         }
     }
 
@@ -281,6 +308,22 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                         // Invalidate children positions
                         requestLayout()
                     }
+                    addListener(object : Animator.AnimatorListener {
+                        override fun onAnimationRepeat(animation: Animator?) {}
+
+                        override fun onAnimationEnd(animation: Animator?) {
+                            val index = state?.view ?: return
+                            reactionText.text = config.reactionTextProvider
+                                    ?.invoke(reactions.indexOf(index))
+                                    ?: return
+                            reactionText.visibility = View.VISIBLE
+                            requestLayout()
+                        }
+
+                        override fun onAnimationCancel(animation: Animator?) {}
+
+                        override fun onAnimationStart(animation: Animator?) {}
+                    })
                 }
     }
 }

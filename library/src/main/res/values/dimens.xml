@@ -2,5 +2,8 @@
 <resources>
     <dimen name="reactions_item_size">24dp</dimen>
     <dimen name="reactions_item_margin">8dp</dimen>
+    <dimen name="reactions_text_horizontal_padding">12dp</dimen>
+    <dimen name="reactions_text_vertical_padding">4dp</dimen>
+    <dimen name="reactions_text_size">8sp</dimen>
     <public />
 </resources>

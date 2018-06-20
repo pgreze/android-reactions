@@ -18,15 +18,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String[] strings = {"like", "love", "laugh", "wow", "sad", "angry"};
         setup(R.id.facebook_btn, new ReactionsConfigBuilder(this)
-                .setReactions(new int[]{
-                        R.drawable.ic_fb_like,
-                        R.drawable.ic_fb_love,
-                        R.drawable.ic_fb_laugh,
-                        R.drawable.ic_fb_wow,
-                        R.drawable.ic_fb_sad,
-                        R.drawable.ic_fb_angry
+                .setReactions(new int[] {
+                    R.drawable.ic_fb_like,
+                    R.drawable.ic_fb_love,
+                    R.drawable.ic_fb_laugh,
+                    R.drawable.ic_fb_wow,
+                    R.drawable.ic_fb_sad,
+                    R.drawable.ic_fb_angry,
                 })
+                .setReactionTexts(position -> strings[position])
                 .build());
 
         int margin = getResources().getDimensionPixelSize(R.dimen.crypto_item_margin);
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
                         R.drawable.ic_crypto_kmd,
                         R.drawable.ic_crypto_zec
                 })
+                .setReactionTexts(R.array.crypto_symbols)
                 .setPopupColor(Color.LTGRAY)
                 .setReactionSize(getResources().getDimensionPixelSize(R.dimen.crypto_item_size))
                 .setHorizontalReactionMargin(margin)

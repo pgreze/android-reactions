@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Reactions Sample</string>
+    <string-array name="crypto_symbols">
+        <item>btc</item>
+        <item>eth</item>
+        <item>ltc</item>
+        <item>dash</item>
+        <item>xrp</item>
+        <item>xmr</item>
+        <item>doge</item>
+        <item>steem</item>
+        <item>kmd</item>
+        <item>zec</item>
+    </string-array>
 </resources>
