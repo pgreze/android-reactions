@@ -23,8 +23,6 @@ class RoundedView(context: Context, private val config: ReactionsConfig) : View(
         alpha = 230
     }
 
-    private var vWidth = 0
-    private var vHeight = 0
     private var cornerSize = 0f
 
     private var xStart = 0f
@@ -32,8 +30,6 @@ class RoundedView(context: Context, private val config: ReactionsConfig) : View(
 
     override fun onSizeChanged(w: Int, h: Int, oldW: Int, oldH: Int) {
         Log.d(tag, "onSizeChanged: w = $w; h = $h; oldW = $oldW; oldH = $oldH")
-        vWidth = w
-        vHeight = h
 
         val xPad = if (paddingLeft + paddingRight <= 0) {
             config.horizontalMargin * 2f
@@ -42,7 +38,7 @@ class RoundedView(context: Context, private val config: ReactionsConfig) : View(
         }
         val bPad = xPad / 2
         val nIcons = config.reactions.size
-        val regIconSize = (vWidth - (2 * xPad + (nIcons - 1) * bPad)) / nIcons
+        val regIconSize = (w - (2 * xPad + (nIcons - 1) * bPad)) / nIcons
         cornerSize = xPad + regIconSize / 2
         xStart = cornerSize
         yStart = 0f
@@ -60,23 +56,23 @@ class RoundedView(context: Context, private val config: ReactionsConfig) : View(
         path.moveTo(xStart, yStart)
 
         // Top line between curves
-        path.lineTo(xStart + (vWidth - 2 * cornerSize), yStart)
+        path.lineTo(xStart + (width - 2 * cornerSize), yStart)
 
         // First curve, right side
-        rect.left = xStart + vWidth - 2 * cornerSize
+        rect.left = xStart + width - 2 * cornerSize
         rect.right = rect.left + cornerSize
         rect.top = yStart
-        rect.bottom = yStart + vHeight
+        rect.bottom = yStart + height
         path.arcTo(rect, 270f, 180f)
 
         // Bottom line between curves
-        path.lineTo(xStart, yStart + vHeight)
+        path.lineTo(xStart, yStart + height)
 
         // Second curve, left side
         rect.left = xStart - cornerSize
         rect.right = xStart
         rect.top = yStart
-        rect.bottom = yStart + vHeight
+        rect.bottom = yStart + height
         path.arcTo(rect, 90f, 180f)
         path.close()
 
