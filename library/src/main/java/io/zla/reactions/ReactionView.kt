@@ -11,12 +11,6 @@ class ReactionView constructor(
         val reaction: Reaction
 ) : ImageView(context) {
 
-    enum class Mode {
-        SMALL, MEDIUM, LARGE
-    }
-
-    var mode = Mode.MEDIUM
-
     val location = Point()
         get() {
             if (field.x == 0 || field.y == 0) {

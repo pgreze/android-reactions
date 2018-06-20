@@ -1,7 +1,6 @@
 package io.zla.reactions
 
 import android.animation.Animator
-import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,7 +9,6 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import java.util.*
 
 /**
  * This ViewGroup displays Reactions and handles interactions with them.
@@ -26,68 +24,84 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     private val horizontalPadding: Int = config.horizontalMargin
     private val verticalPadding: Int = config.verticalMargin
 
-    private var dialogWidth: Int = 0
-    private var dialogHeight: Int = 0
+    private var iconDivider: Int = horizontalPadding / 2
 
-    private var iconDivider: Int = 0
-
-    private var smallIconSize: Int = 0
-    private var mediumIconSize: Int = 0
-    private var largeIconSize: Int = 0
+    private var smallIconSize: Int
+    private var mediumIconSize: Int = config.reactionSize
+    private var largeIconSize: Int = 2 * mediumIconSize
 
     /** Context location (top/left for a button using ReactionPopup, 0/0 for tests) */
     private var parentLocation = Point()
     private var parentHeight: Int = 0
+    private var cornerSize: Int = horizontalPadding + mediumIconSize / 2
 
-    private var dialogX: Int = 0
-    private var dialogY: Int = 0
-    private var cornerSize: Int = 0
-
-    private var isFirstLayout = true
-
-    private val background = RoundedView(context, config)
-    private val reactions: List<ReactionView>
+    private var dialogWidth: Int
+    private var dialogHeight: Int = mediumIconSize + 2 * verticalPadding
 
     init {
-        // Add background
-        addView(background)
-        // Add all reactions
-        reactions = ArrayList<ReactionView>(config.reactions.size).also { list ->
-            for (reaction in config.reactions) {
-                val iconView = ReactionView(context, reaction)
-                addView(iconView)
-                list.add(iconView)
-            }
-        }
-    }
-
-    var reactionSelectedListener: ReactionSelectedListener? = null
-
-    override fun onSizeChanged(width: Int, height: Int, oldW: Int, oldH: Int) {
-        super.onSizeChanged(width, height, oldW, oldH)
-        Log.d(tag, "onSizeChanged: oldW = $oldW; oldH = $oldH; w = $width; h = $height")
-
-        iconDivider = horizontalPadding / 2
-
         val nIcons = config.reactions.size
-
-        mediumIconSize = config.reactionSize
 
         dialogWidth = horizontalPadding * 2 +
                 mediumIconSize * nIcons +
                 iconDivider * nIcons.minus(1)
-
-        largeIconSize = 2 * mediumIconSize
 
         smallIconSize = (dialogWidth
                 - horizontalPadding * 2
                 - largeIconSize
                 - iconDivider * nIcons.minus(1)
                 ) / nIcons.minus(1)
+    }
 
-        dialogHeight = mediumIconSize + 2 * verticalPadding
+    private val background = RoundedView(context, config)
+            .also {
+                it.layoutParams = LayoutParams(dialogWidth, dialogHeight)
+                addView(it)
+            }
+    private val reactions: List<ReactionView> = config.reactions
+            .map {
+                ReactionView(context, it).also {
+                    it.layoutParams = LayoutParams(mediumIconSize, mediumIconSize)
+                    addView(it)
+                }
+            }
+            .toList()
 
-        cornerSize = horizontalPadding + mediumIconSize / 2
+    private var dialogX: Int = 0
+    private var dialogY: Int = 0
+
+    private var currentState: ReactionViewState? = null
+        set(value) {
+            if (field == value) return
+
+            val oldValue = field
+            field = value
+            Log.i(tag, "State: $oldValue -> $value")
+            when (value) {
+                is ReactionViewState.Boundary -> animTranslationY(value)
+                is ReactionViewState.WaitingSelection -> animSize(null)
+                is ReactionViewState.Selected -> animSize(value)
+            }
+        }
+
+    private var currentAnimator: ValueAnimator? = null
+        set(value) {
+            field?.cancel()
+            field = value
+            field?.duration = 100
+            field?.start()
+        }
+
+    var reactionSelectedListener: ReactionSelectedListener? = null
+
+    var dismissListener: (() -> Unit)? = null
+
+    // onLayout/onMeasure https://newfivefour.com/android-custom-views-onlayout-onmeasure.html
+    // Detailed  https://proandroiddev.com/android-draw-a-custom-view-ef79fe2ff54b
+    // Advanced sample: https://github.com/frogermcs/LikeAnimation/tree/master/app/src/main/java/frogermcs/io/likeanimation
+
+    override fun onSizeChanged(width: Int, height: Int, oldW: Int, oldH: Int) {
+        super.onSizeChanged(width, height, oldW, oldH)
+        Log.d(tag, "onSizeChanged: oldW = $oldW; oldH = $oldH; w = $width; h = $height")
 
         // X position will be slightly on right of parent's left position
         dialogX = parentLocation.x + cornerSize + horizontalPadding
@@ -101,106 +115,53 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
             // Below parent view
             dialogY = parentLocation.y + parentHeight
         }
-
-        setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
     }
 
-    private val animators = ArrayList<Animator>(config.reactions.size + 1)
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        Log.d(tag, "onLayout: l = $l; t = $t; r = $r; b = $b")
-
-        // If there are small icon sizes adjust the height of the background to them
-        background.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
-
-        // Animate size changes for each view
-        animators.clear()
-        loop@ for (i in 0 until childCount) {
-            val view = getChildAt(i)
-
-            animators.add(when (view) {
-                is ReactionView -> {
-                    val targetSize = when (view.mode) {
-                        ReactionView.Mode.SMALL -> smallIconSize
-                        ReactionView.Mode.MEDIUM -> mediumIconSize
-                        ReactionView.Mode.LARGE -> largeIconSize
-                    }
-
-                    if (isFirstLayout) {
-                        layoutIconView(view, targetSize.toFloat())
-                        continue@loop
-                    }
-
-                    ValueAnimator.ofFloat(view.width.toFloat(), targetSize.toFloat()).apply {
-                        addUpdateListener { animation -> layoutIconView(view, animation.animatedValue as Float) }
-                    }
-                }
-                is RoundedView -> {
-                    Log.d(tag, "onLayout: dialogX = $dialogX; cornerSize = $cornerSize")
-                    val top = if (getSelectedIcon() != null) {
-                        dialogY + (mediumIconSize - smallIconSize)
-                    } else {
-                        dialogY
-                    }.toFloat()
-
-                    if (isFirstLayout) {
-                        layoutRoundedView(view, top)
-                        continue@loop
-                    }
-
-                    ValueAnimator.ofFloat(view.y, top).apply {
-                        addUpdateListener { animation -> layoutRoundedView(view, animation.animatedValue as Float) }
-                    }
-                }
-                else -> continue@loop
-            })
+        background.also { view ->
+            val translationX = view.translationX.toInt()
+            val translationY = view.translationY.toInt()
+            view.layout(
+                    dialogX - cornerSize + translationX,
+                    dialogY + mediumIconSize - view.layoutParams.height + translationY,
+                    dialogX + dialogWidth - cornerSize + translationX,
+                    dialogY + dialogHeight + translationY)
         }
 
-        if (!isFirstLayout) {
-            AnimatorSet().apply {
-                playTogether(animators)
-                duration = 100
-            }.start()
-        }
-        isFirstLayout = false
-    }
-
-    private fun layoutIconView(view: ReactionView, targetSize: Float) {
-        // Slow, think of another way to do this
         var prevX = 0
-        for (i in 1 until indexOfChild(view)) {
-            prevX += getChildAt(i).width + iconDivider
-        }
-        val bottom = dialogY + dialogHeight - verticalPadding
-        val top = (bottom - targetSize).toInt()
-        val left = dialogX - mediumIconSize / 2 + prevX
-        val right = (left + targetSize).toInt()
-        view.layout(left, top, right, bottom)
-    }
+        reactions.forEach { view ->
+            val translationX = view.translationX.toInt()
+            val translationY = view.translationY.toInt()
 
-    private fun layoutRoundedView(view: RoundedView, top: Float) {
-        view.layout(
-                dialogX - cornerSize,
-                top.toInt(),
-                dialogX + dialogWidth - cornerSize,
-                dialogY + dialogHeight)
+            val bottom = dialogY + dialogHeight - verticalPadding + translationY
+            val top = bottom - view.layoutParams.height + translationY
+            val left = dialogX - mediumIconSize / 2 + prevX + translationX
+            val right = left + view.layoutParams.width + translationX
+            view.layout(left, top, right, bottom)
+
+            prevX += view.width + iconDivider
+        }
     }
 
     fun show(parentLocation: Point, parent: View) {
         this.parentLocation = parentLocation
         parentHeight = parent.height
         visibility = View.VISIBLE
-        // TODO: appear effect after visibility change
-        resetChildrenToNormalSize()
+        // Appear effect
+        currentState = ReactionViewState.Boundary.Appear(path = dialogHeight to 0)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                // Ignores when appearing
+                if (currentState is ReactionViewState.Boundary.Appear) return true
+
                 val view = getIntersectedIcon(event.rawX, event.rawY)
                 if (view == null) {
-                    resetChildrenToNormalSize()
-                } else if (view.mode !== ReactionView.Mode.LARGE) {
-                    setChildToLarge(view)
+                    currentState = ReactionViewState.WaitingSelection
+                } else if ((currentState as? ReactionViewState.Selected)?.view != view) {
+                    currentState = ReactionViewState.Selected(view)
                 }
             }
             MotionEvent.ACTION_UP -> {
@@ -209,28 +170,27 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                 if (reactionSelectedListener?.invoke(reaction, position) == true) {
                     dismiss()
                 } else {
-                    resetChildrenToNormalSize()
+                    currentState = ReactionViewState.WaitingSelection
                 }
             }
-            MotionEvent.ACTION_CANCEL -> resetChildrenToNormalSize()
+            MotionEvent.ACTION_CANCEL -> {
+                currentState = ReactionViewState.WaitingSelection
+            }
         }
         return true
     }
 
     fun resetChildrenToNormalSize() {
-        reactions.forEach { it.mode = ReactionView.Mode.MEDIUM }
-        requestLayout()
+        currentState = ReactionViewState.WaitingSelection
     }
 
     fun dismiss() {
-        parentLocation.set(0, 0)
-        parentHeight = 0
-        // TODO: Disappear effect before change visibility to gone
-        visibility = View.GONE
-    }
+        if (currentState == null) return
 
-    private fun getSelectedIcon(): ReactionView? =
-            reactions.firstOrNull { it.mode == ReactionView.Mode.LARGE }
+        currentState = ReactionViewState.Boundary.Disappear(
+                (currentState as? ReactionViewState.Selected)?.view,
+                0 to dialogHeight)
+    }
 
     private fun getIntersectedIcon(x: Float, y: Float): ReactionView? =
             reactions.firstOrNull {
@@ -240,8 +200,130 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                         && y < it.location.y + it.height + iconDivider
             }
 
-    private fun setChildToLarge(child: ReactionView) {
-        reactions.forEach { it.mode = if (it == child) ReactionView.Mode.LARGE else ReactionView.Mode.SMALL }
+    private fun animTranslationY(boundary: ReactionViewState.Boundary) {
+        // Init views
+        val initialAlpha = if (boundary is ReactionViewState.Boundary.Appear) 0f else 1f
+        forEach {
+            it.alpha = initialAlpha
+            it.translationY = boundary.path.first.toFloat()
+            if (boundary is ReactionViewState.Boundary.Appear) {
+                it.layoutParams.size = mediumIconSize
+            }
+        }
         requestLayout()
+
+        // TODO: animate selected index if boundary == Disappear
+        currentAnimator = ValueAnimator.ofFloat(0f, 1f)
+                .apply {
+                    addUpdateListener {
+                        val progress = it.animatedValue as Float
+                        val translationY = boundary.path.progressMove(progress).toFloat()
+
+                        forEach {
+                            it.translationY = translationY
+                            it.alpha = if (boundary is ReactionViewState.Boundary.Appear) {
+                                progress
+                            } else {
+                                1 - progress
+                            }
+                        }
+
+                        // Invalidate children positions
+                        requestLayout()
+                    }
+                    addListener(object : Animator.AnimatorListener {
+                        override fun onAnimationRepeat(animation: Animator?) {}
+
+                        override fun onAnimationEnd(animation: Animator?) {
+                            when (boundary) {
+                                is ReactionViewState.Boundary.Appear -> {
+                                    currentState = ReactionViewState.WaitingSelection
+                                }
+                                is ReactionViewState.Boundary.Disappear -> {
+                                    parentLocation.set(0, 0)
+                                    parentHeight = 0
+                                    visibility = View.GONE
+                                    currentState = null
+                                    // Notify listener
+                                    dismissListener?.invoke()
+                                }
+                            }
+                        }
+
+                        override fun onAnimationCancel(animation: Animator?) {}
+
+                        override fun onAnimationStart(animation: Animator?) {}
+                    })
+                }
     }
+
+    private fun animSize(state: ReactionViewState.Selected?) {
+        val paths = reactions.map {
+            it.layoutParams.size to if (state == null) {
+                mediumIconSize
+            } else if (state.view == it) {
+                largeIconSize
+            } else {
+                smallIconSize
+            }
+        }
+
+        currentAnimator = ValueAnimator.ofFloat(0f, 1f)
+                .apply {
+                    addUpdateListener {
+                        val progress = it.animatedValue as Float
+
+                        reactions.forEachIndexed { index, view ->
+                            val size = paths[index].progressMove(progress)
+                            view.layoutParams.size = size
+                        }
+
+                        // Invalidate children positions
+                        requestLayout()
+                    }
+                }
+    }
+}
+
+private var ViewGroup.LayoutParams.size: Int
+    get() = width
+    set(value) {
+        width = value
+        height = value
+    }
+
+private inline fun ViewGroup.forEach(action: (View) -> Unit) {
+    for (child in 0 until childCount) {
+        action(getChildAt(child))
+    }
+}
+
+private fun progressMove(from: Int, to: Int, progress: Float): Int =
+        from + ((to - from) * progress).toInt()
+
+private fun Pair<Int, Int>.progressMove(progress: Float): Int =
+        progressMove(first, second, progress)
+
+sealed class ReactionViewState {
+
+    sealed class Boundary(val path: Pair<Int, Int>) : ReactionViewState() {
+
+        /** All views are moving from +translationY to 0 with normal size */
+        class Appear(path: Pair<Int, Int>) : Boundary(path)
+
+        /**
+         * Different behaviour considering [selectedView]:
+         * - if no [selectedView], going down with normal size
+         * - otherwise going down
+         *   while [selectedView] is going (idx=0=up, other=up/left) and decreasing size
+         */
+        class Disappear(val selectedView: ReactionView?, path: Pair<Int, Int>) : Boundary(path)
+    }
+
+    object WaitingSelection : ReactionViewState()
+
+    /**
+     * Increase size of selected [view] while others are decreasing.
+     */
+    class Selected(val view: ReactionView) : ReactionViewState()
 }
