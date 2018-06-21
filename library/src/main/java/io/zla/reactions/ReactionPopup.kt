@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.PopupWindow
+import kotlin.math.roundToInt
 
 /**
  * Entry point for reaction popup.
@@ -55,10 +56,11 @@ class ReactionPopup(context: Context, reactionsConfig: ReactionsConfig)
             // Show fullscreen with button as context provider
             showAtLocation(v, Gravity.NO_GRAVITY, 0, 0)
             isTouchAlwaysInsideButton = true
+            val firstClick = Point(event.rawX.roundToInt(), event.rawY.roundToInt())
             buttonLocation = IntArray(2)
                     .also(v::getLocationOnScreen)
                     .let { Point(it[0], it[1]) }
-            view.show(buttonLocation, v)
+            view.show(firstClick, buttonLocation, v)
         }
 
         isTouchAlwaysInsideButton = isTouchAlwaysInsideButton && event.inInsideView(buttonLocation, v)

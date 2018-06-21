@@ -10,7 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import kotlin.math.roundToInt
 
 /**
  * This ViewGroup displays Reactions and handles interactions with them.
@@ -32,7 +31,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     private var mediumIconSize: Int = config.reactionSize
     private var largeIconSize: Int = 2 * mediumIconSize
 
-    /** Context location (top/left for a button using ReactionPopup, 0/0 for tests) */
+    private var firstClick = Point()
     private var parentLocation = Point()
     private var parentHeight: Int = 0
 
@@ -117,10 +116,8 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
     override fun onSizeChanged(width: Int, height: Int, oldW: Int, oldH: Int) {
         super.onSizeChanged(width, height, oldW, oldH)
-        Log.d(tag, "onSizeChanged: oldW = $oldW; oldH = $oldH; w = $width; h = $height")
-
         // X position will be slightly on right of parent's left position
-        dialogX = parentLocation.x + horizontalPadding
+        dialogX = firstClick.x - horizontalPadding - mediumIconSize / 2
         if (dialogX + dialogWidth >= width) {
             // Center dialog
             dialogX = Math.max(0, (width - dialogWidth) / 2)
@@ -169,11 +166,16 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         }
     }
 
-    fun show(parentLocation: Point, parent: View) {
+    fun show(firstClick: Point, parentLocation: Point, parent: View) {
+        this.firstClick = firstClick
         this.parentLocation = parentLocation
         parentHeight = parent.height
-        visibility = View.VISIBLE
+
+        // Resize, could be fixed with later resolved width/height
+        onSizeChanged(width, height, width, height)
+
         // Appear effect
+        visibility = View.VISIBLE
         currentState = ReactionViewState.Boundary.Appear(path = dialogHeight to 0)
     }
 
