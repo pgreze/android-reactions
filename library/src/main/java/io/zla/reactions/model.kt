@@ -7,6 +7,7 @@ import android.support.annotation.ArrayRes
 import android.support.annotation.ColorInt
 import android.support.annotation.Px
 import android.support.v4.content.ContextCompat
+import android.widget.ImageView
 import kotlin.math.roundToInt
 
 /**
@@ -24,7 +25,10 @@ typealias ReactionSelectedListener = (reaction: Reaction?, position: Int) -> Boo
  */
 typealias ReactionTextProvider = (position: Int) -> CharSequence?
 
-data class Reaction(val image: Drawable)
+data class Reaction(
+        val image: Drawable,
+        val scaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER
+)
 
 data class ReactionsConfig(
         val reactions: Collection<Reaction>,
@@ -59,11 +63,15 @@ class ReactionsConfigBuilder(private val context: Context) {
     private var textVerticalPadding: Int? = null
     private var textSize: Float? = null
 
-    fun setReactions(drawables: Collection<Drawable>): ReactionsConfigBuilder =
-            this.also { this.reactions = drawables.map { Reaction(it) } }
+    fun setReactions(reactions: Collection<Reaction>): ReactionsConfigBuilder =
+            this.also { this.reactions = reactions }
 
-    fun setReactions(res: IntArray): ReactionsConfigBuilder =
-            setReactions(res.map { ContextCompat.getDrawable(context, it)!! })
+    @JvmOverloads
+    fun setReactions(
+            res: IntArray,
+            scaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER
+    ): ReactionsConfigBuilder =
+            setReactions(res.map { Reaction(ContextCompat.getDrawable(context, it)!!, scaleType) })
 
     fun setReactionTexts(reactionTextProvider: ReactionTextProvider?): ReactionsConfigBuilder =
             this.also { this.reactionTextProvider = reactionTextProvider }
