@@ -35,7 +35,6 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     /** Context location (top/left for a button using ReactionPopup, 0/0 for tests) */
     private var parentLocation = Point()
     private var parentHeight: Int = 0
-    private var cornerSize: Int = horizontalPadding + mediumIconSize / 2
 
     private var dialogWidth: Int
     private var dialogHeight: Int = mediumIconSize + 2 * verticalPadding
@@ -121,16 +120,16 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         Log.d(tag, "onSizeChanged: oldW = $oldW; oldH = $oldH; w = $width; h = $height")
 
         // X position will be slightly on right of parent's left position
-        dialogX = parentLocation.x + cornerSize + horizontalPadding
+        dialogX = parentLocation.x + horizontalPadding
         if (dialogX + dialogWidth >= width) {
             // Center dialog
-            dialogX = Math.max(0, (width - dialogWidth) / 2) + cornerSize
+            dialogX = Math.max(0, (width - dialogWidth) / 2)
         }
         // Y position will be slightly on top of parent view
-        dialogY = parentLocation.y - dialogHeight - parentHeight
-        if (parentHeight < 0) {
+        dialogY = parentLocation.y - dialogHeight * 2
+        if (dialogY < 0) {
             // Below parent view
-            dialogY = parentLocation.y + parentHeight
+            dialogY = parentLocation.y + parentHeight + dialogHeight
         }
     }
 
@@ -139,9 +138,9 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
             val translationX = view.translationX.toInt()
             val translationY = view.translationY.toInt()
             view.layout(
-                    dialogX - cornerSize + translationX,
+                    dialogX + translationX,
                     dialogY + mediumIconSize - view.layoutParams.height + translationY,
-                    dialogX + dialogWidth - cornerSize + translationX,
+                    dialogX + dialogWidth + translationX,
                     dialogY + dialogHeight + translationY)
         }
 
@@ -152,7 +151,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
             val bottom = dialogY + dialogHeight - verticalPadding + translationY
             val top = bottom - view.layoutParams.height + translationY
-            val left = dialogX - mediumIconSize / 2 + prevX + translationX
+            val left = dialogX + horizontalPadding + prevX + translationX
             val right = left + view.layoutParams.width + translationX
             view.layout(left, top, right, bottom)
 
