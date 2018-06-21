@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlin.math.roundToInt
 
 /**
  * This ViewGroup displays Reactions and handles interactions with them.
@@ -33,7 +34,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
     private var firstClick = Point()
     private var parentLocation = Point()
-    private var parentHeight: Int = 0
+    private var parentSize = Pair(0, 0)
 
     private var dialogWidth: Int
     private var dialogHeight: Int = mediumIconSize + 2 * verticalPadding
@@ -106,6 +107,9 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
             field?.start()
         }
 
+    private var isFirstTouchAlwaysInsideButton = true
+    private var isIgnoringFirstReaction: Boolean = false
+
     var reactionSelectedListener: ReactionSelectedListener? = null
 
     var dismissListener: (() -> Unit)? = null
@@ -126,7 +130,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         dialogY = parentLocation.y - dialogHeight * 2
         if (dialogY < 0) {
             // Below parent view
-            dialogY = parentLocation.y + parentHeight + dialogHeight
+            dialogY = parentLocation.y + parentSize.second + dialogHeight
         }
     }
 
@@ -166,10 +170,14 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         }
     }
 
-    fun show(firstClick: Point, parentLocation: Point, parent: View) {
-        this.firstClick = firstClick
-        this.parentLocation = parentLocation
-        parentHeight = parent.height
+    fun show(event: MotionEvent, parent: View) {
+        this.firstClick = Point(event.rawX.roundToInt(), event.rawY.roundToInt())
+        this.parentLocation = IntArray(2)
+                .also(parent::getLocationOnScreen)
+                .let { Point(it[0], it[1]) }
+        parentSize = parent.width to parent.height
+        isFirstTouchAlwaysInsideButton = true
+        isIgnoringFirstReaction = true
 
         // Resize, could be fixed with later resolved width/height
         onSizeChanged(width, height, width, height)
@@ -180,8 +188,20 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        isFirstTouchAlwaysInsideButton = isFirstTouchAlwaysInsideButton && inInsideParentView(event)
+
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                // Track first moves of the first click, avoiding to auto-select first reaction
+                if (isIgnoringFirstReaction) {
+                    val v = reactions.first()
+                    val isBelowFirstReaction = event.rawX >= v.x && event.rawX <= v.right &&
+                            event.rawY >= v.y + v.height && event.rawY <= v.y + v.height + dialogHeight
+                    isIgnoringFirstReaction = isIgnoringFirstReaction &&
+                            (isBelowFirstReaction || isFirstTouchAlwaysInsideButton)
+                    if (isIgnoringFirstReaction) return true
+                }
+
                 // Ignores when appearing
                 if (currentState is ReactionViewState.Boundary.Appear) return true
 
@@ -193,6 +213,12 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                 }
             }
             MotionEvent.ACTION_UP -> {
+                // Ignores it if first move was always inside parent view
+                if (isFirstTouchAlwaysInsideButton) {
+                    isFirstTouchAlwaysInsideButton = false
+                    return true
+                }
+
                 val reaction = getIntersectedIcon(event.rawX, event.rawY)?.reaction
                 val position = reaction?.let { config.reactions.indexOf(it) } ?: -1
                 if (reactionSelectedListener?.invoke(reaction, position) == true) {
@@ -220,12 +246,18 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                 0 to dialogHeight)
     }
 
+    private fun inInsideParentView(event: MotionEvent): Boolean =
+            event.rawX >= parentLocation.x
+                    && event.rawX <= parentLocation.x + parentSize.first
+                    && event.rawY >= parentLocation.y
+                    && event.rawY <= parentLocation.y + parentSize.second
+
     private fun getIntersectedIcon(x: Float, y: Float): ReactionView? =
             reactions.firstOrNull {
                 x >= it.location.x - horizontalPadding
                         && x < it.location.x + it.width + iconDivider
                         && y >= it.location.y - horizontalPadding
-                        && y < it.location.y + it.height + iconDivider
+                        && y < it.location.y + it.height + dialogHeight + iconDivider
             }
 
     private fun animTranslationY(boundary: ReactionViewState.Boundary) {
@@ -268,8 +300,6 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                                     currentState = ReactionViewState.WaitingSelection
                                 }
                                 is ReactionViewState.Boundary.Disappear -> {
-                                    parentLocation.set(0, 0)
-                                    parentHeight = 0
                                     visibility = View.GONE
                                     currentState = null
                                     // Notify listener

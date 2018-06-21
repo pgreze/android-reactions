@@ -3,7 +3,6 @@ package io.zla.reactions
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.MotionEvent
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.PopupWindow
-import kotlin.math.roundToInt
 
 /**
  * Entry point for reaction popup.
@@ -39,8 +37,6 @@ class ReactionPopup(context: Context, reactionsConfig: ReactionsConfig)
             rootView.addView(it)
         }.also { it.dismissListener = ::dismiss }
     }
-    private var isTouchAlwaysInsideButton = true
-    private var buttonLocation = Point()
 
     init {
         contentView = rootView
@@ -55,32 +51,10 @@ class ReactionPopup(context: Context, reactionsConfig: ReactionsConfig)
         if (!isShowing) {
             // Show fullscreen with button as context provider
             showAtLocation(v, Gravity.NO_GRAVITY, 0, 0)
-            isTouchAlwaysInsideButton = true
-            val firstClick = Point(event.rawX.roundToInt(), event.rawY.roundToInt())
-            buttonLocation = IntArray(2)
-                    .also(v::getLocationOnScreen)
-                    .let { Point(it[0], it[1]) }
-            view.show(firstClick, buttonLocation, v)
+            view.show(event, v)
         }
-
-        isTouchAlwaysInsideButton = isTouchAlwaysInsideButton && event.inInsideView(buttonLocation, v)
-
-        if (event.action == MotionEvent.ACTION_UP && isTouchAlwaysInsideButton) {
-            // Keep action up and just reset to un-touch defaults
-            view.resetChildrenToNormalSize()
-        } else {
-            // Forward last action up event
-            view.onTouchEvent(event)
-        }
-
-        return true
+        return view.onTouchEvent(event)
     }
-
-    private fun MotionEvent.inInsideView(location: Point, v: View): Boolean =
-            rawX >= location.x
-                    && rawX <= location.x + v.width
-                    && rawY >= location.y
-                    && rawY <= location.y + v.height
 
     override fun dismiss() {
         view.dismiss()
