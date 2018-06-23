@@ -221,7 +221,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
                 val reaction = getIntersectedIcon(event.rawX, event.rawY)?.reaction
                 val position = reaction?.let { config.reactions.indexOf(it) } ?: -1
-                if (reactionSelectedListener?.invoke(reaction, position) == true) {
+                if (reactionSelectedListener?.invoke(position) == true) {
                     dismiss()
                 } else {
                     currentState = ReactionViewState.WaitingSelection

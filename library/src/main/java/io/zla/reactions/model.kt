@@ -12,16 +12,15 @@ import kotlin.math.roundToInt
 
 /**
  * Selected reaction callback.
- * @param reaction selected item, or null if no selection.
  * @param position selected item position, or -1.
- * @return if this selection should end reaction selector.
+ * @return if reaction selector should close.
  */
-typealias ReactionSelectedListener = (reaction: Reaction?, position: Int) -> Boolean
+typealias ReactionSelectedListener = (position: Int) -> Boolean
 
 /**
  * Reaction text provider.
- * @param position position of current selected item in [ReactionsConfig.reactions]
- * @return optional reaction text, null for no text
+ * @param position position of current selected item in [ReactionsConfig.reactions].
+ * @return optional reaction text, null for no text.
  */
 typealias ReactionTextProvider = (position: Int) -> CharSequence?
 

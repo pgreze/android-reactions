@@ -10,6 +10,7 @@ import android.widget.Toast;
 import io.zla.reactions.ReactionPopup;
 import io.zla.reactions.ReactionsConfig;
 import io.zla.reactions.ReactionsConfigBuilder;
+import kotlin.jvm.functions.Function1;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,13 +56,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setup(@IdRes int btnId, ReactionsConfig config) {
         ReactionPopup reactionPopup = new ReactionPopup(this, config);
-        reactionPopup.setReactionSelectedListener((reaction, position) -> {
+        reactionPopup.setReactionSelectedListener((position) -> {
             Toast toast = Toast.makeText(MainActivity.this,
-                    reaction + " selected at position=" + position,
+                    "Selection position=" + position,
                     Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 300);
             toast.show();
-            // Close selector if not invalid item (for testing this feature)
+            // Close selector if not invalid item (testing purpose)
             return position != 3;
         });
 
