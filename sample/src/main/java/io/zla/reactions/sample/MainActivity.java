@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
                     R.drawable.ic_fb_angry,
                 })
                 .setReactionTexts(position -> strings[position])
-                .build());
+                .build(),
+                null);
 
         int margin = getResources().getDimensionPixelSize(R.dimen.crypto_item_margin);
         setup(R.id.crypto_btn, new ReactionsConfigBuilder(this)
@@ -51,20 +52,22 @@ public class MainActivity extends AppCompatActivity {
                 .setReactionSize(getResources().getDimensionPixelSize(R.dimen.crypto_item_size))
                 .setHorizontalReactionMargin(margin)
                 .setVerticalReactionMargin(margin / 2)
-                .build());
+                .build(),
+                (position) -> {
+                    Toast toast = Toast.makeText(MainActivity.this,
+                            "Selection position=" + position,
+                            Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 300);
+                    toast.show();
+                    // Close selector if not invalid item (testing purpose)
+                    return position != 3;
+                });
     }
 
-    private void setup(@IdRes int btnId, ReactionsConfig config) {
+    private void setup(@IdRes int btnId, ReactionsConfig config,
+                       Function1<? super Integer, Boolean> selectionListener) {
         ReactionPopup reactionPopup = new ReactionPopup(this, config);
-        reactionPopup.setReactionSelectedListener((position) -> {
-            Toast toast = Toast.makeText(MainActivity.this,
-                    "Selection position=" + position,
-                    Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 300);
-            toast.show();
-            // Close selector if not invalid item (testing purpose)
-            return position != 3;
-        });
+        reactionPopup.setReactionSelectedListener(selectionListener);
 
         findViewById(btnId).setOnTouchListener(reactionPopup);
     }
