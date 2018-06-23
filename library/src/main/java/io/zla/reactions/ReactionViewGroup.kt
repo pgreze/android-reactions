@@ -344,8 +344,8 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
                         override fun onAnimationEnd(animation: Animator?) {
                             val index = state?.view ?: return
-                            reactionText.text = config.reactionTextProvider
-                                    ?.invoke(reactions.indexOf(index))
+                            reactionText.text =
+                                    config.reactionTextProvider(reactions.indexOf(index))
                                     ?: return
                             reactionText.visibility = View.VISIBLE
                             requestLayout()

@@ -14,10 +14,11 @@ import android.widget.PopupWindow
 /**
  * Entry point for reaction popup.
  */
-class ReactionPopup(context: Context, reactionsConfig: ReactionsConfig)
-    : PopupWindow(context), View.OnTouchListener {
-
-    var reactionSelectedListener: ReactionSelectedListener? = null
+class ReactionPopup @JvmOverloads constructor(
+        context: Context,
+        reactionsConfig: ReactionsConfig,
+        var reactionSelectedListener: ReactionSelectedListener? = null
+) : PopupWindow(context), View.OnTouchListener {
 
     private val rootView = FrameLayout(context).also {
         it.layoutParams = ViewGroup.LayoutParams(

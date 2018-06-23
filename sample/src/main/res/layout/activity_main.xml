@@ -12,6 +12,24 @@
         android:background="@android:color/darker_gray">
 
         <Button
+            android:id="@+id/top_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="50dp"
+            android:text="Top button" />
+
+        <Button
+            android:id="@+id/top_right_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="50dp"
+            android:text="Top right button" />s
+
+        <Button
             android:id="@+id/facebook_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,6 +44,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
+        <Button
+            android:id="@+id/right_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="50dp"
+            android:text="Right" />
 
         <Button
             android:id="@+id/crypto_btn"
