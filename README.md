@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.zla:android-reactions:1.0.0'
+    implementation 'io.zla:android-reactions:1.0'
 }
 ```
 
