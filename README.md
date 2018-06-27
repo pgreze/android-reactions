@@ -73,6 +73,17 @@ View reactionButton = findViewById(R.id.reaction_button);
 reactionButton.setOnTouchListener(popup);
 ```
 
+Notice: if button is inside a scroll view, you need to temporarily disable it:
+
+```kotlin
+reactionButton.setOnTouchListener { v, event ->
+    // Avoid scroll view to consume events
+    scrollView.requestDisallowInterceptTouchEvent(true)
+    // Resolve reactions selection
+    popup.onTouch(v, event)
+}
+```
+
 3. Additional config:
 
 Kotlin:
