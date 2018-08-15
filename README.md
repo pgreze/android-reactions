@@ -5,10 +5,6 @@
 Android reactions is an open source and fully customizable implementation of the
 [Facebook reactions](https://en.facebookbrand.com/assets/reactions) pattern.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/pgreze/android-reactions/master/resources/demo.gif" alt="Demo">
-</p>
-
 # Installation
 
 ```groovy
