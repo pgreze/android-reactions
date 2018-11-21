@@ -13,14 +13,14 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.zla:android-reactions:1.0'
+    implementation 'com.github.pgreze:android-reactions:1.0'
 }
 ```
 
 # Usage
 
-See [Java](sample/src/main/java/io/zla/reactions/sample/MainActivity.java)
-or [Kotlin](sample/src/main/java/io/zla/reactions/sample/KotlinSamples.kt) samples.
+See [Java](sample/src/main/java/com/github/pgreze/reactions/sample/MainActivity.java)
+or [Kotlin](sample/src/main/java/com/github/pgreze/reactions/sample/KotlinSamples.kt) samples.
 
 1. Popup creation:
 

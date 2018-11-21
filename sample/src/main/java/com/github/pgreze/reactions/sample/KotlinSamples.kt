@@ -1,4 +1,4 @@
-package io.zla.reactions.sample
+package com.github.pgreze.reactions.sample
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -7,10 +7,10 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import io.zla.reactions.ReactionPopup
-import io.zla.reactions.dsl.reactionConfig
-import io.zla.reactions.dsl.reactionPopup
-import io.zla.reactions.dsl.reactions
+import com.github.pgreze.reactions.ReactionPopup
+import com.github.pgreze.reactions.dsl.reactionConfig
+import com.github.pgreze.reactions.dsl.reactionPopup
+import com.github.pgreze.reactions.dsl.reactions
 
 fun MainActivity.setup() {
     val size = resources.getDimensionPixelSize(R.dimen.crypto_item_size)

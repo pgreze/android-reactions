@@ -1,4 +1,4 @@
-package io.zla.reactions.sample;
+package com.github.pgreze.reactions.sample;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import io.zla.reactions.ReactionPopup;
-import io.zla.reactions.ReactionsConfigBuilder;
+import com.github.pgreze.reactions.ReactionPopup;
+import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
 public class MainActivity extends AppCompatActivity {
 

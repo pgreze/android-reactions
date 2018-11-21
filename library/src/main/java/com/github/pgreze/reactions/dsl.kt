@@ -1,14 +1,14 @@
-package io.zla.reactions.dsl
+package com.github.pgreze.reactions.dsl
 
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.widget.ImageView
-import io.zla.reactions.Reaction
-import io.zla.reactions.ReactionPopup
-import io.zla.reactions.ReactionSelectedListener
-import io.zla.reactions.ReactionsConfig
-import io.zla.reactions.ReactionsConfigBuilder
+import com.github.pgreze.reactions.Reaction
+import com.github.pgreze.reactions.ReactionPopup
+import com.github.pgreze.reactions.ReactionSelectedListener
+import com.github.pgreze.reactions.ReactionsConfig
+import com.github.pgreze.reactions.ReactionsConfigBuilder
 
 fun reactionPopup(
         context: Context,

@@ -1,4 +1,4 @@
-package io.zla.reactions
+package com.github.pgreze.reactions
 
 import android.animation.Animator
 import android.animation.ValueAnimator

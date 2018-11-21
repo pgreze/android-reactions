@@ -1,4 +1,4 @@
-package io.zla.reactions
+package com.github.pgreze.reactions
 
 import android.annotation.SuppressLint
 import android.content.Context

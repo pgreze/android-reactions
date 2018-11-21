@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion targetSdk
     defaultConfig {
-        applicationId 'io.zla.fbreactions'
+        applicationId 'com.github.pgreze.fbreactions'
         minSdkVersion 21
         targetSdkVersion targetSdk
         versionCode 1

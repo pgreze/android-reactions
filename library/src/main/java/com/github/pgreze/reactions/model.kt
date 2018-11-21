@@ -1,4 +1,4 @@
-package io.zla.reactions
+package com.github.pgreze.reactions
 
 import android.content.Context
 import android.graphics.Color

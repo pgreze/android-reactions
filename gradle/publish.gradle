@@ -7,14 +7,14 @@ ext {
     bintrayRepo = 'maven'
     bintrayName = 'android-reactions'
 
-    publishedGroupId = 'io.zla'
+    publishedGroupId = 'com.github.pgreze'
     libraryName = 'Android Reactions'
     artifact = 'android-reactions'
 
     libraryDescription = 'A Facebook like reactions picker for Android'
 
-    siteUrl = 'https://github.com/zla-io/android-reactions'
-    gitUrl = 'https://github.com/zla-io/android-reactions.git'
+    siteUrl = 'https://github.com/pgreze/android-reactions'
+    gitUrl = 'https://github.com/pgreze/android-reactions.git'
 
     libraryVersion = version_name
 
