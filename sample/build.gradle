@@ -15,6 +15,13 @@ android {
             minifyEnabled false
         }
     }
+
+    flavorDimensions "provider"
+    productFlavors {
+        local { dimension "provider" }
+        remote { dimension "provider" }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -22,6 +29,8 @@ android {
 }
 
 dependencies {
-    implementation project(':library')
     implementation deps.appcompat
+
+    localImplementation project(':library')
+    remoteImplementation 'com.github.pgreze:android-reactions:1.0'
 }
