@@ -71,8 +71,7 @@ class ReactionsConfigBuilder(val context: Context) {
 
     var reactionTextProvider: ReactionTextProvider = NO_TEXT_PROVIDER
 
-    // reactionTexts = R.array.my_texts
-    var ReactionsConfigBuilder.reactionTexts: Int
+    var reactionTexts: Int
         get() = throw NotImplementedError()
         set(@ArrayRes value) { withReactionTexts(value) }
 
@@ -97,7 +96,9 @@ class ReactionsConfigBuilder(val context: Context) {
     fun withReactions(
             res: IntArray,
             scaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER
-    ) = withReactions(res.map { Reaction(ContextCompat.getDrawable(context, it)!!, scaleType) })
+    ) = withReactions(res.map {
+        Reaction(ContextCompat.getDrawable(context, it)!!, scaleType)
+    })
 
     fun withReactionTexts(reactionTextProvider: ReactionTextProvider) = this.also {
         this.reactionTextProvider = reactionTextProvider
