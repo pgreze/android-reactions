@@ -3,7 +3,7 @@
 [![jcenter](https://api.bintray.com/packages/pgreze/maven/android-reactions/images/download.svg)](https://bintray.com/pgreze/maven/android-reactions/_latestVersion) 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Android reactions is an open source and fully customizable implementation of the
+An open source and fully customizable implementation of the
 [Facebook reactions](https://en.facebookbrand.com/assets/reactions) pattern.
 
 <p align="center">
