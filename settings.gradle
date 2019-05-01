@@ -1,4 +1,0 @@
-rootProject.name = 'android-reactions'
-
-include ':library'
-include ':sample'
