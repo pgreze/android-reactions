@@ -1,4 +1,6 @@
 import com.android.build.gradle.LibraryExtension
+import com.android.build.gradle.internal.dependency.dependencyUrl
+import com.jfrog.bintray.gradle.BintrayExtension
 import groovy.util.Node
 import org.gradle.api.publish.maven.MavenPom
 
@@ -27,9 +29,9 @@ dependencies {
     "api"(Libs.support)
 }
 
-// Publishing
+// Maven publishing
 
-group = Publish.groupId
+group = Publish.group
 version = Publish.version
 
 val androidSourcesJar by tasks.registering(Jar::class) {
@@ -46,7 +48,17 @@ afterEvaluate {
                 artifact(tasks.getByName("bundleReleaseAar"))
                 artifact(androidSourcesJar.get())
 
-                pom.addDependencies()
+                pom {
+                    licenses {
+                        license {
+                            name.set("The Apache Software License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    scm { url.set(Publish.url) }
+
+                    addDependencies()
+                }
             }
         }
     }
@@ -69,5 +81,46 @@ fun DependencySet.addDependencies(node: Node, scope: String) = forEach {
         appendNode("artifactId", it.name)
         appendNode("version", it.version)
         appendNode("scope", scope)
+    }
+}
+
+//
+// Bintray Publishing
+//
+// https://github.com/codepath/android_guides/wiki/Building-your-own-Android-library
+// https://inthecheesefactory.com/blog/how-to-upload-library-to-jcenter-maven-central-as-dependency
+//
+
+apply {
+    plugin("com.jfrog.bintray")
+}
+
+val local = project.rootProject.file("local.properties").toProperties()
+
+// Notice: extensions.configure is the long version of "bintray" not generated correctly
+extensions.configure<BintrayExtension>("bintray") {
+    user = local.propOrEnv("bintray.user", "BINTRAY_USER")
+    key = local.propOrEnv("bintray.apikey", "BINTRAY_API_KEY")
+
+    setPublications("maven")
+
+    pkg.apply {
+        repo = "maven"
+        name = "android-reactions"
+        desc = "A Facebook like reactions picker for Android"
+        websiteUrl = Publish.url
+        vcsUrl = "${Publish.url}.git"
+        setLicenses("Apache-2.0")
+        publish = true
+        publicDownloadNumbers = true
+        version.apply {
+            desc = pkg.desc
+            gpg.apply {
+                // Determines whether to GPG sign the files (default: false)
+                sign = true
+                // The passphrase for GPG signing (optional)
+                passphrase = local.propOrEnv("bintray.gpg.password", "BINTRAY_GPG_PASSWORD")
+            }
+        }
     }
 }
