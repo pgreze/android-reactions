@@ -26,4 +26,3 @@ dependencies {
 }
 
 apply(from = "../gradle/install.gradle")
-apply(from = "../gradle/bintray.gradle")
