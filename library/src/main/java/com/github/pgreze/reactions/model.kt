@@ -144,23 +144,22 @@ class ReactionsConfigBuilder(val context: Context) {
         this.textSize = textSize
     }
 
-    fun build(): ReactionsConfig =
-        ReactionsConfig(
-            reactions = reactions.takeIf { it.isNotEmpty() }
-                ?: throw IllegalArgumentException("Empty reactions"),
-            popupColor = popupColor,
-            reactionSize = reactionSize,
-            horizontalMargin = horizontalMargin,
-            verticalMargin = verticalMargin,
-            reactionTextProvider = reactionTextProvider,
-            textBackground = textBackground
-                ?: ContextCompat.getDrawable(context, R.drawable.reactions_text_background)!!,
-            textColor = textColor,
-            textHorizontalPadding = textHorizontalPadding.takeIf { it != 0 }
-                ?: context.resources.getDimension(R.dimen.reactions_text_horizontal_padding).roundToInt(),
-            textVerticalPadding = textVerticalPadding.takeIf { it != 0 }
-                ?: context.resources.getDimension(R.dimen.reactions_text_vertical_padding).roundToInt(),
-            textSize = textSize.takeIf { it != 0f }
-                ?: context.resources.getDimension(R.dimen.reactions_text_size)
-        )
+    fun build() = ReactionsConfig(
+        reactions = reactions.takeIf { it.isNotEmpty() }
+            ?: throw IllegalArgumentException("Empty reactions"),
+        popupColor = popupColor,
+        reactionSize = reactionSize,
+        horizontalMargin = horizontalMargin,
+        verticalMargin = verticalMargin,
+        reactionTextProvider = reactionTextProvider,
+        textBackground = textBackground
+            ?: ContextCompat.getDrawable(context, R.drawable.reactions_text_background)!!,
+        textColor = textColor,
+        textHorizontalPadding = textHorizontalPadding.takeIf { it != 0 }
+            ?: context.resources.getDimension(R.dimen.reactions_text_horizontal_padding).roundToInt(),
+        textVerticalPadding = textVerticalPadding.takeIf { it != 0 }
+            ?: context.resources.getDimension(R.dimen.reactions_text_vertical_padding).roundToInt(),
+        textSize = textSize.takeIf { it != 0f }
+            ?: context.resources.getDimension(R.dimen.reactions_text_size)
+    )
 }
