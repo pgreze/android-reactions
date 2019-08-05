@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.github.pgreze.reactions.PopupGravity.*
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -122,12 +123,30 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
     override fun onSizeChanged(width: Int, height: Int, oldW: Int, oldH: Int) {
         super.onSizeChanged(width, height, oldW, oldH)
-        // X position will be slightly on right of parent's left position
-        dialogX = firstClick.x - horizontalPadding - mediumIconSize / 2
-        if (dialogX + dialogWidth >= width) {
-            // Center dialog
+
+        dialogX = when (config.popupGravity) {
+            DEFAULT -> // Slightly on right of parent's left position
+                firstClick.x - horizontalPadding - mediumIconSize / 2
+            PARENT_LEFT -> // Fallback to SCREEN_RIGHT
+                parentLocation.x
+                    .takeUnless { it + dialogWidth > width }
+                    ?: width - dialogWidth - config.popupMargin
+            PARENT_RIGHT -> // Fallback to SCREEN_LEFT
+                (parentLocation.x + parentSize.width - dialogWidth)
+                    .takeUnless { it < 0 }
+                    ?: config.popupMargin
+            SCREEN_LEFT ->
+                config.popupMargin
+            SCREEN_RIGHT ->
+                width - dialogWidth - config.popupMargin
+            CENTER ->
+                (width - dialogWidth) / 2
+        }
+        // Fallback to center if invalid position
+        if (dialogX < 0 || dialogX + dialogWidth >= width) {
             dialogX = max(0, (width - dialogWidth) / 2)
         }
+
         // Y position will be slightly on top of parent view
         dialogY = parentLocation.y - dialogHeight * 2
         if (dialogY < 0) {

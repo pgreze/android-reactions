@@ -102,6 +102,8 @@ val popup = reactionPopup(this, ::onReactionSelected) {
     reactionsIds = intArrayOf(R.drawable.img1, R.drawable.img2, R.drawable.img3)
 
     // Optional popup/item styles
+    popupGravity = PopupGravity.DEFAULT
+    popupMargin = resources.getDimensionPixelSize(R.dimen.horizontal_margin)
     popupColor = Color.WHITE
     reactionSize = resources.getDimensionPixelSize(R.dimen.item_size)
     horizontalMargin = resources.getDimensionPixelSize(R.dimen.item_margin)
@@ -131,6 +133,9 @@ Java:
 .withHorizontalReactionMargin(margin)
 // Vertical margin (default: 8dp)
 .withVerticalReactionMargin(margin / 2)
+// Override popup gravity
+.withPopupGravity(PopupGravity.PARENT_RIGHT)
+.withPopupMargin(margin)
 // Change popup color (default: white)
 .withPopupColor(Color.LTGRAY)
 // Item text provider / string array (default: no texts)

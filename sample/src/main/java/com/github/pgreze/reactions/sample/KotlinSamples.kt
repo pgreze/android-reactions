@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import com.github.pgreze.reactions.PopupGravity
 import com.github.pgreze.reactions.ReactionPopup
 import com.github.pgreze.reactions.dsl.reactionConfig
 import com.github.pgreze.reactions.dsl.reactionPopup
@@ -58,6 +59,8 @@ fun MainActivity.setup() {
             R.drawable.ic_crypto_zec
         )
         reactionTextProvider = { position -> "Item $position" }
+        popupGravity = PopupGravity.PARENT_RIGHT
+        popupMargin = resources.getDimensionPixelSize(R.dimen.crypto_item_size)
         textBackground = ColorDrawable(Color.TRANSPARENT)
         textColor = Color.BLACK
         textHorizontalPadding = 0

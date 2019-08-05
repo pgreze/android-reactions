@@ -34,6 +34,10 @@ data class ReactionsConfig(
     @Px val reactionSize: Int,
     @Px val horizontalMargin: Int,
     @Px val verticalMargin: Int,
+    /** Horizontal gravity compare to parent view or screen */
+    val popupGravity: PopupGravity,
+    /** Margin between dialog and screen border used by [PopupGravity] screen related values. */
+    val popupMargin: Int,
     @ColorInt val popupColor: Int,
     val reactionTextProvider: ReactionTextProvider,
     val textBackground: Drawable,
@@ -44,6 +48,21 @@ data class ReactionsConfig(
 )
 
 private val NO_TEXT_PROVIDER: ReactionTextProvider = { _ -> null }
+
+enum class PopupGravity {
+    /** Default position, similar to Facebook app. */
+    DEFAULT,
+    /** Align dialog left side with left side of the parent view. */
+    PARENT_LEFT,
+    /** Align dialog right side with right side of the parent view. */
+    PARENT_RIGHT,
+    /** Position dialog on left side of the screen. */
+    SCREEN_LEFT,
+    /** Position dialog on right side of the screen. */
+    SCREEN_RIGHT,
+    /** Position dialog on center of the screen. */
+    CENTER
+}
 
 class ReactionsConfigBuilder(val context: Context) {
 
@@ -65,6 +84,10 @@ class ReactionsConfigBuilder(val context: Context) {
         context.resources.getDimensionPixelSize(R.dimen.reactions_item_margin)
 
     @Px var verticalMargin: Int = horizontalMargin
+
+    var popupGravity: PopupGravity = PopupGravity.DEFAULT
+
+    var popupMargin: Int = horizontalMargin
 
     @ColorInt
     var popupColor: Int = Color.WHITE
@@ -120,6 +143,14 @@ class ReactionsConfigBuilder(val context: Context) {
         this.verticalMargin = verticalMargin
     }
 
+    fun withPopupGravity(popupGravity: PopupGravity) = this.also {
+        this.popupGravity = popupGravity
+    }
+
+    fun withPopupMargin(popupMargin: Int) = this.also {
+        this.popupMargin = popupMargin
+    }
+
     fun withPopupColor(@ColorInt popupColor: Int) = this.also {
         this.popupColor = popupColor
     }
@@ -147,6 +178,8 @@ class ReactionsConfigBuilder(val context: Context) {
     fun build() = ReactionsConfig(
         reactions = reactions.takeIf { it.isNotEmpty() }
             ?: throw IllegalArgumentException("Empty reactions"),
+        popupGravity = popupGravity,
+        popupMargin = popupMargin,
         popupColor = popupColor,
         reactionSize = reactionSize,
         horizontalMargin = horizontalMargin,
