@@ -36,7 +36,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
     private var firstClick = Point()
     private var parentLocation = Point()
-    private var parentSize = Pair(0, 0)
+    private var parentSize: Size = Size(0, 0)
 
     private var dialogWidth: Int
     private var dialogHeight: Int = mediumIconSize + 2 * verticalPadding
@@ -132,7 +132,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         dialogY = parentLocation.y - dialogHeight * 2
         if (dialogY < 0) {
             // Below parent view
-            dialogY = parentLocation.y + parentSize.second + dialogHeight
+            dialogY = parentLocation.y + parentSize.height + dialogHeight
         }
     }
 
@@ -177,7 +177,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         this.parentLocation = IntArray(2)
                 .also(parent::getLocationOnScreen)
                 .let { Point(it[0], it[1]) }
-        parentSize = parent.width to parent.height
+        parentSize = Size(parent.width, parent.height)
         isFirstTouchAlwaysInsideButton = true
         isIgnoringFirstReaction = true
 
@@ -250,9 +250,9 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
     private fun inInsideParentView(event: MotionEvent): Boolean =
             event.rawX >= parentLocation.x
-                    && event.rawX <= parentLocation.x + parentSize.first
+                    && event.rawX <= parentLocation.x + parentSize.width
                     && event.rawY >= parentLocation.y
-                    && event.rawY <= parentLocation.y + parentSize.second
+                    && event.rawY <= parentLocation.y + parentSize.height
 
     private fun getIntersectedIcon(x: Float, y: Float): ReactionView? =
             reactions.firstOrNull {
@@ -367,6 +367,9 @@ private var ViewGroup.LayoutParams.size: Int
         width = value
         height = value
     }
+
+/** Replace with [android.util.Size] when minSdkVersion = 21 */
+private class Size(val width: Int, val height: Int)
 
 private inline fun ViewGroup.forEach(action: (View) -> Unit) {
     for (child in 0 until childCount) {
