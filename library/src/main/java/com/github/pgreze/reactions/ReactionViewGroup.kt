@@ -10,6 +10,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
@@ -124,7 +126,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         dialogX = firstClick.x - horizontalPadding - mediumIconSize / 2
         if (dialogX + dialogWidth >= width) {
             // Center dialog
-            dialogX = Math.max(0, (width - dialogWidth) / 2)
+            dialogX = max(0, (width - dialogWidth) / 2)
         }
         // Y position will be slightly on top of parent view
         dialogY = parentLocation.y - dialogHeight * 2
@@ -162,7 +164,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         if (reactionText.visibility == View.VISIBLE) {
             reactionText.measure(0, 0)
             val selectedView = (currentState as? ReactionViewState.Selected)?.view ?: return
-            val top = selectedView.top - Math.min(selectedView.layoutParams.size, reactionText.measuredHeight * 2)
+            val top = selectedView.top - min(selectedView.layoutParams.size, reactionText.measuredHeight * 2)
             val bottom = top + reactionText.measuredHeight
             val left = selectedView.left + (selectedView.right - selectedView.left) / 2f - reactionText.measuredWidth / 2f
             val right = left + reactionText.measuredWidth

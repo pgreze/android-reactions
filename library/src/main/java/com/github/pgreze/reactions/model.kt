@@ -52,7 +52,7 @@ class ReactionsConfigBuilder(val context: Context) {
     var reactions: Collection<Reaction> = emptyList()
 
     // reactions = listOf(R.drawable.img1, R.drawable.img2, ...)
-    var ReactionsConfigBuilder.reactionsIds: IntArray
+    var reactionsIds: IntArray
         get() = throw NotImplementedError()
         set(value) { withReactions(value) }
 

@@ -11,7 +11,9 @@ import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
 public class MainActivity extends AppCompatActivity {
 
-    String[] strings = {"like", "love", "laugh", "wow", "sad", "angry"};
+    private final String[] strings = {
+        "like", "love", "laugh", "wow", "sad", "angry"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
