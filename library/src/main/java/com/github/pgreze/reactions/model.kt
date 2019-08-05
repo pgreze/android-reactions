@@ -25,22 +25,22 @@ typealias ReactionSelectedListener = (position: Int) -> Boolean
 typealias ReactionTextProvider = (position: Int) -> CharSequence?
 
 data class Reaction(
-        val image: Drawable,
-        val scaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER
+    val image: Drawable,
+    val scaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER
 )
 
 data class ReactionsConfig(
-        val reactions: Collection<Reaction>,
-        @Px val reactionSize: Int,
-        @Px val horizontalMargin: Int,
-        @Px val verticalMargin: Int,
-        @ColorInt val popupColor: Int,
-        val reactionTextProvider: ReactionTextProvider,
-        val textBackground: Drawable,
-        @ColorInt val textColor: Int,
-        val textHorizontalPadding: Int,
-        val textVerticalPadding: Int,
-        val textSize: Float
+    val reactions: Collection<Reaction>,
+    @Px val reactionSize: Int,
+    @Px val horizontalMargin: Int,
+    @Px val verticalMargin: Int,
+    @ColorInt val popupColor: Int,
+    val reactionTextProvider: ReactionTextProvider,
+    val textBackground: Drawable,
+    @ColorInt val textColor: Int,
+    val textHorizontalPadding: Int,
+    val textVerticalPadding: Int,
+    val textSize: Float
 )
 
 private val NO_TEXT_PROVIDER: ReactionTextProvider = { _ -> null }
@@ -58,11 +58,11 @@ class ReactionsConfigBuilder(val context: Context) {
 
     @Px
     var reactionSize: Int =
-            context.resources.getDimensionPixelSize(R.dimen.reactions_item_size)
+        context.resources.getDimensionPixelSize(R.dimen.reactions_item_size)
 
     @Px
     var horizontalMargin: Int =
-            context.resources.getDimensionPixelSize(R.dimen.reactions_item_margin)
+        context.resources.getDimensionPixelSize(R.dimen.reactions_item_margin)
 
     @Px var verticalMargin: Int = horizontalMargin
 
@@ -94,8 +94,8 @@ class ReactionsConfigBuilder(val context: Context) {
 
     @JvmOverloads
     fun withReactions(
-            res: IntArray,
-            scaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER
+        res: IntArray,
+        scaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER
     ) = withReactions(res.map {
         Reaction(ContextCompat.getDrawable(context, it)!!, scaleType)
     })
@@ -145,22 +145,22 @@ class ReactionsConfigBuilder(val context: Context) {
     }
 
     fun build(): ReactionsConfig =
-            ReactionsConfig(
-                    reactions = reactions.takeIf { it.isNotEmpty() }
-                            ?: throw IllegalArgumentException("Empty reactions"),
-                    popupColor = popupColor,
-                    reactionSize = reactionSize,
-                    horizontalMargin = horizontalMargin,
-                    verticalMargin = verticalMargin,
-                    reactionTextProvider = reactionTextProvider,
-                    textBackground = textBackground
-                            ?: ContextCompat.getDrawable(context, R.drawable.reactions_text_background)!!,
-                    textColor = textColor,
-                    textHorizontalPadding = textHorizontalPadding.takeIf { it != 0 }
-                            ?: context.resources.getDimension(R.dimen.reactions_text_horizontal_padding).roundToInt(),
-                    textVerticalPadding = textVerticalPadding.takeIf { it != 0 }
-                            ?: context.resources.getDimension(R.dimen.reactions_text_vertical_padding).roundToInt(),
-                    textSize = textSize.takeIf { it != 0f }
-                            ?: context.resources.getDimension(R.dimen.reactions_text_size)
-            )
+        ReactionsConfig(
+            reactions = reactions.takeIf { it.isNotEmpty() }
+                ?: throw IllegalArgumentException("Empty reactions"),
+            popupColor = popupColor,
+            reactionSize = reactionSize,
+            horizontalMargin = horizontalMargin,
+            verticalMargin = verticalMargin,
+            reactionTextProvider = reactionTextProvider,
+            textBackground = textBackground
+                ?: ContextCompat.getDrawable(context, R.drawable.reactions_text_background)!!,
+            textColor = textColor,
+            textHorizontalPadding = textHorizontalPadding.takeIf { it != 0 }
+                ?: context.resources.getDimension(R.dimen.reactions_text_horizontal_padding).roundToInt(),
+            textVerticalPadding = textVerticalPadding.takeIf { it != 0 }
+                ?: context.resources.getDimension(R.dimen.reactions_text_vertical_padding).roundToInt(),
+            textSize = textSize.takeIf { it != 0f }
+                ?: context.resources.getDimension(R.dimen.reactions_text_size)
+        )
 }

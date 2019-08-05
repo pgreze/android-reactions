@@ -46,16 +46,16 @@ fun MainActivity.setup() {
     // Config DSL + listener in popup constructor
     val config = reactionConfig(this) {
         reactionsIds = intArrayOf(
-                R.drawable.ic_crypto_btc,
-                R.drawable.ic_crypto_eth,
-                R.drawable.ic_crypto_ltc,
-                R.drawable.ic_crypto_dash,
-                R.drawable.ic_crypto_xrp,
-                R.drawable.ic_crypto_xmr,
-                R.drawable.ic_crypto_doge,
-                R.drawable.ic_crypto_steem,
-                R.drawable.ic_crypto_kmd,
-                R.drawable.ic_crypto_zec
+            R.drawable.ic_crypto_btc,
+            R.drawable.ic_crypto_eth,
+            R.drawable.ic_crypto_ltc,
+            R.drawable.ic_crypto_dash,
+            R.drawable.ic_crypto_xrp,
+            R.drawable.ic_crypto_xmr,
+            R.drawable.ic_crypto_doge,
+            R.drawable.ic_crypto_steem,
+            R.drawable.ic_crypto_kmd,
+            R.drawable.ic_crypto_zec
         )
         reactionTextProvider = { position -> "Item $position" }
         textBackground = ColorDrawable(Color.TRANSPARENT)

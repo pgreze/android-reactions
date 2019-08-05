@@ -53,12 +53,12 @@ Java:
 ```java
 ReactionsConfig config = new ReactionsConfigBuilder(context)
     .withReactions(new int[]{
-            R.drawable.ic_fb_like,
-            R.drawable.ic_fb_love,
-            R.drawable.ic_fb_laugh,
-            R.drawable.ic_fb_wow,
-            R.drawable.ic_fb_sad,
-            R.drawable.ic_fb_angry
+        R.drawable.ic_fb_like,
+        R.drawable.ic_fb_love,
+        R.drawable.ic_fb_laugh,
+        R.drawable.ic_fb_wow,
+        R.drawable.ic_fb_sad,
+        R.drawable.ic_fb_angry
     })
     .build()
 
