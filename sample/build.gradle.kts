@@ -33,7 +33,7 @@ configure<AppExtension> {
 }
 
 dependencies {
-    "implementation"(Libs.appcompat)
+    implementation(Libs.appcompat)
 
     "localImplementation"(project(path = ":library"))
     "remoteImplementation"("com.github.pgreze:android-reactions:1.0")

@@ -11,7 +11,7 @@ object Publish {
 }
 
 object Versions {
-    const val kotlinVersion = "1.3.21"
+    const val kotlinVersion = "1.3.41"
     const val supportLibraryVersion = "27.1.1"
 }
 

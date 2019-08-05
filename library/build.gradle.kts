@@ -25,8 +25,8 @@ configure<LibraryExtension> {
 }
 
 dependencies {
-    "api"(Libs.kotlin)
-    "api"(Libs.support)
+    api(Libs.kotlin)
+    api(Libs.support)
 }
 
 // Maven publishing
