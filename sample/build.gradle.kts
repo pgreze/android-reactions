@@ -9,7 +9,7 @@ configure<AppExtension> {
     compileSdkVersion(Config.targetSdk)
 
     defaultConfig {
-        applicationId = "com.github.pgreze.fbreactions"
+        applicationId = "${Publish.group}.fbreactions"
         minSdkVersion(Config.minSdk)
         targetSdkVersion(Config.targetSdk)
         versionCode = 1
