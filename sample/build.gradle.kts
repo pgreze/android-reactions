@@ -7,6 +7,7 @@ plugins {
 
 configure<AppExtension> {
     compileSdkVersion(Config.targetSdk)
+
     defaultConfig {
         applicationId = "com.github.pgreze.fbreactions"
         minSdkVersion(Config.minSdk)
@@ -14,16 +15,11 @@ configure<AppExtension> {
         versionCode = 1
         versionName = "1.0"
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
         }
-    }
-
-    flavorDimensions("provider")
-    productFlavors {
-        create("local") { setDimension("provider") }
-        create("remote") { setDimension("provider") }
     }
 
     compileOptions {
@@ -35,6 +31,12 @@ configure<AppExtension> {
 dependencies {
     implementation(Libs.appcompat)
 
-    "localImplementation"(project(path = ":library"))
-    "remoteImplementation"("com.github.pgreze:android-reactions:1.0")
+    // Enable with -PremoteArtifacts
+    // See https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties
+    val remoteArtifacts: Boolean? by project
+    if (remoteArtifacts == true) {
+        implementation(group = Publish.group, name = Publish.artifactId, version = Publish.version)
+    } else {
+        implementation(project(":library"))
+    }
 }
