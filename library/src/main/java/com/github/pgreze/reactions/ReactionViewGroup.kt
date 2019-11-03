@@ -208,6 +208,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         currentState = ReactionViewState.Boundary.Appear(path = dialogHeight to 0)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         isFirstTouchAlwaysInsideButton = isFirstTouchAlwaysInsideButton && inInsideParentView(event)
 
@@ -338,12 +339,10 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
     private fun animSize(state: ReactionViewState.Selected?) {
         val paths = reactions.map {
-            it.layoutParams.size to if (state == null) {
-                mediumIconSize
-            } else if (state.view == it) {
-                largeIconSize
-            } else {
-                smallIconSize
+            it.layoutParams.size to when {
+                state == null -> mediumIconSize
+                state.view == it -> largeIconSize
+                else -> smallIconSize
             }
         }
 
