@@ -1,8 +1,8 @@
 import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.internal.dependency.dependencyUrl
 import com.jfrog.bintray.gradle.BintrayExtension
 import groovy.util.Node
 import org.gradle.api.publish.maven.MavenPom
+import java.util.*
 
 plugins {
     id("com.android.library")
@@ -95,7 +95,10 @@ apply {
     plugin("com.jfrog.bintray")
 }
 
-val local = project.rootProject.file("local.properties").toProperties()
+val local = project.rootProject.file("local.properties")
+    .takeIf { it.exists() }
+    ?.toProperties()
+    ?: Properties() // Allows CI to run without local.properties
 
 // Notice: extensions.configure is the long version of "bintray" not generated correctly
 extensions.configure<BintrayExtension>("bintray") {
