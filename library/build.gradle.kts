@@ -12,11 +12,14 @@ plugins {
 
 configure<LibraryExtension> {
     compileSdkVersion(Config.targetSdk)
+
     defaultConfig {
         minSdkVersion(Config.minSdk)
         targetSdkVersion(Config.targetSdk)
     }
+
     resourcePrefix("reactions_")
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
