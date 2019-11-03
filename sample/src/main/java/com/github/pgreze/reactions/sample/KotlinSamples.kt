@@ -2,6 +2,8 @@ package com.github.pgreze.reactions.sample
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -25,11 +27,11 @@ fun MainActivity.setup() {
             resId    { R.drawable.ic_crypto_ltc }
             reaction { R.drawable.ic_crypto_dash scale ImageView.ScaleType.FIT_CENTER }
             reaction { R.drawable.ic_crypto_xrp scale ImageView.ScaleType.FIT_CENTER }
-            drawable { getDrawable(R.drawable.ic_crypto_xmr) }
-            drawable { getDrawable(R.drawable.ic_crypto_doge) }
-            reaction { getDrawable(R.drawable.ic_crypto_steem) scale ImageView.ScaleType.FIT_CENTER }
-            reaction { getDrawable(R.drawable.ic_crypto_kmd) scale ImageView.ScaleType.FIT_CENTER }
-            drawable { getDrawable(R.drawable.ic_crypto_zec) }
+            drawable { drawable(R.drawable.ic_crypto_xmr) }
+            drawable { drawable(R.drawable.ic_crypto_doge) }
+            reaction { drawable(R.drawable.ic_crypto_steem) scale ImageView.ScaleType.FIT_CENTER }
+            reaction { drawable(R.drawable.ic_crypto_kmd) scale ImageView.ScaleType.FIT_CENTER }
+            drawable { drawable(R.drawable.ic_crypto_zec) }
         }
         reactionTexts = R.array.crypto_symbols
         popupColor = Color.LTGRAY
@@ -82,3 +84,7 @@ fun MainActivity.toast(text: String) {
             .apply { setGravity(Gravity.CENTER, 0, 300) }
             .show()
 }
+
+@Suppress("DEPRECATION")
+fun MainActivity.drawable(@DrawableRes id: Int): Drawable =
+    resources.getDrawable(id)
