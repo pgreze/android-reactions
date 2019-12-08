@@ -47,7 +47,7 @@ dependencies {
     // See https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties
     val remoteArtifacts: Boolean? by project
     if (remoteArtifacts == true) {
-        implementation(group = Publish.group, name = Publish.artifactId, version = Publish.version)
+        implementation(group = Publish.group, name = Publish.artifactId, version = getLibraryVersion())
     } else {
         implementation(project(":library"))
     }

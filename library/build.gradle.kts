@@ -35,7 +35,7 @@ dependencies {
 // Maven publishing
 
 group = Publish.group
-version = Publish.version
+version = getLibraryVersion()
 
 val androidSourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")

@@ -6,7 +6,6 @@ object Config {
 object Publish {
     const val group = "com.github.pgreze"
     const val artifactId = "android-reactions"
-    const val version = "1.1"
     const val url = "https://github.com/pgreze/android-reactions"
 }
 
