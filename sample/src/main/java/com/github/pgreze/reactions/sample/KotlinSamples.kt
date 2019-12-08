@@ -3,7 +3,7 @@ package com.github.pgreze.reactions.sample
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View

@@ -11,12 +11,11 @@ object Publish {
 }
 
 object Versions {
-    const val kotlin = "1.3.41"
-    const val supportLibraryVersion = "27.1.1"
+    const val kotlin = "1.3.61"
 }
 
 object Libs {
     const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
-    const val support = "com.android.support:support-compat:${Versions.supportLibraryVersion}"
-    const val appcompat = "com.android.support:appcompat-v7:${Versions.supportLibraryVersion}"
+    const val core = "androidx.core:core:1.1.0"
+    const val appcompat = "androidx.appcompat:appcompat:1.1.0"
 }
