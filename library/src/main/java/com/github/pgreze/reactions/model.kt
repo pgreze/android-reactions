@@ -3,10 +3,10 @@ package com.github.pgreze.reactions
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.support.annotation.ArrayRes
-import android.support.annotation.ColorInt
-import android.support.annotation.Px
-import android.support.v4.content.ContextCompat
+import androidx.annotation.ArrayRes
+import androidx.annotation.ColorInt
+import androidx.annotation.Px
+import androidx.core.content.ContextCompat
 import android.widget.ImageView
 import kotlin.math.roundToInt
 
