@@ -2,7 +2,7 @@ package com.github.pgreze.reactions.dsl
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getDrawable as getDrawableCompat
 import android.widget.ImageView
 import com.github.pgreze.reactions.Reaction
 import com.github.pgreze.reactions.ReactionPopup
@@ -44,7 +44,7 @@ class ReactionsConfiguration(
 ) {
     fun resId(block: () -> Int) {
         reactions += Reaction(
-                image = ContextCompat.getDrawable(context, block())!!,
+                image = getDrawableCompat(context, block())!!,
                 scaleType = scaleType
         )
     }
@@ -62,7 +62,7 @@ class ReactionBuilderBlock(private val context: Context) {
 
     infix fun Int.scale(scaleType: ImageView.ScaleType) =
             Reaction(
-                    image = ContextCompat.getDrawable(context, this)!!,
+                    image = getDrawableCompat(context, this)!!,
                     scaleType = scaleType
             )
 
