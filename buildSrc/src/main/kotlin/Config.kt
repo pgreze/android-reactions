@@ -12,7 +12,7 @@ object Publish {
 
 object Versions {
     const val kotlin = "1.3.41"
-    const val supportLibraryVersion = "27.1.1"
+    const val supportLibraryVersion = "28.0.0"
 }
 
 object Libs {
