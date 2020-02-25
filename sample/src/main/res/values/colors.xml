@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="light_gray">#FF81888F</color>
+    <color name="color_like">#FF1A9BFC</color>
+    <color name="color_love">#ED3533</color>
+    <color name="color_got_it">#FFC10E</color>
+    <color name="color_need_it">#f0ba15</color>
+    <color name="orange">#FFFF7B00</color>
 </resources>

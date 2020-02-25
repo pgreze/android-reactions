@@ -18,7 +18,7 @@ class ReactionPopup @JvmOverloads constructor(
         context: Context,
         reactionsConfig: ReactionsConfig,
         var reactionSelectedListener: ReactionSelectedListener? = null
-) : PopupWindow(context), View.OnTouchListener {
+) : PopupWindow(context), View.OnTouchListener ,View.OnLongClickListener{
 
     private val rootView = FrameLayout(context).also {
         it.layoutParams = ViewGroup.LayoutParams(
@@ -55,6 +55,14 @@ class ReactionPopup @JvmOverloads constructor(
             view.show(event, v)
         }
         return view.onTouchEvent(event)
+    }
+
+    override fun onLongClick(v: View): Boolean {
+        if (!isShowing) {
+            showAtLocation(v, Gravity.NO_GRAVITY, 0, 0)
+            view.show(v)
+        }
+        return true
     }
 
     override fun dismiss() {
