@@ -1,6 +1,5 @@
 # Android reactions
 
-[![jcenter](https://api.bintray.com/packages/pgreze/maven/android-reactions/images/download.svg)](https://bintray.com/pgreze/maven/android-reactions/_latestVersion) 
 [![Build Status](https://app.bitrise.io/app/d98620d26ebbcf12/status.svg?token=g6EoKo073j2eIQavozsNfQ&branch=master)](https://app.bitrise.io/app/d98620d26ebbcf12)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -11,7 +10,7 @@ An open source and fully customizable implementation of the
   <img src="https://raw.githubusercontent.com/pgreze/android-reactions/master/resources/demo.gif" alt="Demo">
 </p>
 
-# Installation
+# Installation [![jcenter](https://api.bintray.com/packages/pgreze/maven/android-reactions/images/download.svg)](https://bintray.com/pgreze/maven/android-reactions/_latestVersion)
 
 ```groovy
 repositories {
@@ -19,6 +18,7 @@ repositories {
 }
 
 dependencies {
+    // Check jcenter badge for latestVersion 🔝
     implementation "com.github.pgreze:android-reactions:$latestVersion"
 }
 ```
