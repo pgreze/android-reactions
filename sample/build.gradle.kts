@@ -13,7 +13,7 @@ configure<AppExtension> {
         minSdkVersion(Config.minSdk)
         targetSdkVersion(Config.targetSdk)
         versionCode = 1
-        versionName = "1.0"
+        versionName = getLibraryVersion()
     }
 
     signingConfigs {
