@@ -28,8 +28,8 @@ configure<LibraryExtension> {
 }
 
 dependencies {
-    api(Libs.kotlin)
-    api(Libs.core)
+    api(kotlin("stdlib-jdk7"))
+    api("androidx.core:core-ktx:1.2.0")
 }
 
 // Maven publishing
