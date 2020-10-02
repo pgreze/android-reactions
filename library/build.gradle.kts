@@ -35,7 +35,7 @@ dependencies {
 // Maven publishing
 
 group = Publish.group
-version = getLibraryVersion()
+version = System.getenv("BITRISE_GIT_TAG")?.trimStart('v') ?: "WIP"
 
 val androidSourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
