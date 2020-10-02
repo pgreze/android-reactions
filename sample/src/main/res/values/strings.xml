@@ -12,4 +12,7 @@
         <item>kmd</item>
         <item>zec</item>
     </string-array>
+
+    <string name="txt_like">Like</string>
+    <string name="txt_like_it">Like it</string>
 </resources>

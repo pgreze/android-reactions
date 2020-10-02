@@ -63,6 +63,22 @@
             android:layout_marginLeft="50dp"
             android:text="Crypto" />
 
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/fb_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:padding="10dp"
+            android:background="@android:color/background_light"
+            android:button="@drawable/ic_like_gray"
+            android:gravity="center_vertical"
+            android:text="Like"
+            android:textAllCaps="false"
+            android:textColor="@color/light_gray"
+            android:layout_marginRight="20dp" />
+
     </FrameLayout>
 
 </LinearLayout>

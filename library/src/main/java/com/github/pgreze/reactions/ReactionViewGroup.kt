@@ -10,7 +10,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.github.pgreze.reactions.PopupGravity.*
+import com.github.pgreze.reactions.PopupGravity.CENTER
+import com.github.pgreze.reactions.PopupGravity.DEFAULT
+import com.github.pgreze.reactions.PopupGravity.PARENT_LEFT
+import com.github.pgreze.reactions.PopupGravity.PARENT_RIGHT
+import com.github.pgreze.reactions.PopupGravity.SCREEN_LEFT
+import com.github.pgreze.reactions.PopupGravity.SCREEN_RIGHT
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -194,6 +199,23 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
 
     fun show(event: MotionEvent, parent: View) {
         this.firstClick = Point(event.rawX.roundToInt(), event.rawY.roundToInt())
+        this.parentLocation = IntArray(2)
+                .also(parent::getLocationOnScreen)
+                .let { Point(it[0], it[1]) }
+        parentSize = Size(parent.width, parent.height)
+        isFirstTouchAlwaysInsideButton = true
+        isIgnoringFirstReaction = true
+
+        // Resize, could be fixed with later resolved width/height
+        onSizeChanged(width, height, width, height)
+
+        // Appear effect
+        visibility = View.VISIBLE
+        currentState = ReactionViewState.Boundary.Appear(path = dialogHeight to 0)
+    }
+
+    fun show(parent: View) {
+        this.firstClick = Point(parent.x.roundToInt() + 100, parent.y.roundToInt())
         this.parentLocation = IntArray(2)
                 .also(parent::getLocationOnScreen)
                 .let { Point(it[0], it[1]) }
