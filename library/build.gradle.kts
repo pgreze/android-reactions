@@ -135,8 +135,6 @@ extensions.configure<BintrayExtension>("bintray") {
 // See https://pgreze.dev/posts/2020-05-28-static-doc-netlify/ for the CSS trick + Github support
 //
 
-val tagVersion: String? by extra
-
 val moveCss by tasks.registering {
     description = "Move style.css in the module folder (distribution friendly)."
     fun File.rewriteStyleLocations() {
@@ -165,7 +163,7 @@ tasks.dokka {
         moduleName = Publish.artifactId
         sourceLink {
             // URL showing where the source code can be accessed through the web browser
-            url = "${Publish.githubUrl}/tree/${tagVersion ?: "master"}/"
+            url = "${Publish.githubUrl}/tree/${Publish.tagVersion ?: "master"}/"
             // Suffix which is used to append the line number to the URL. Use #L for GitHub
             lineSuffix = "#L"
         }
