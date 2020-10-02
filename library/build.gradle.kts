@@ -132,9 +132,32 @@ extensions.configure<BintrayExtension>("bintray") {
 //
 // Dokka
 //
+// See https://pgreze.dev/posts/2020-05-28-static-doc-netlify/ for the CSS trick + Github support
+//
 
 val tagVersion: String? by extra
 
+val moveCss by tasks.registering {
+    description = "Move style.css in the module folder (distribution friendly)."
+    fun File.rewriteStyleLocations() {
+        readText().replace("../style.css", "style.css")
+            .also { writeText(it) }
+    }
+    fun File.recursivelyRewriteStyleLocations() {
+        list()?.map(this::resolve)?.forEach {
+            if (it.isDirectory) it.recursivelyRewriteStyleLocations() else it.rewriteStyleLocations()
+        }
+    }
+    doLast {
+        val dokkaTask = tasks.dokka.get()
+        val dokkaOutputDirectory = file(dokkaTask.outputDirectory)
+        val dokkaSingleModuleFolder = dokkaOutputDirectory.resolve(dokkaTask.configuration.moduleName)
+        dokkaSingleModuleFolder.recursivelyRewriteStyleLocations()
+        dokkaOutputDirectory.resolve("style.css").also {
+            it.renameTo(dokkaSingleModuleFolder.resolve(it.name))
+        }
+    }
+}
 tasks.dokka {
     outputFormat = "html"
     outputDirectory = "$buildDir/dokka"
@@ -147,4 +170,5 @@ tasks.dokka {
             lineSuffix = "#L"
         }
     }
+    finalizedBy(moveCss)
 }
