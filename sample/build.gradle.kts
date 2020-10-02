@@ -13,7 +13,7 @@ configure<AppExtension> {
         minSdkVersion(Config.minSdk)
         targetSdkVersion(Config.targetSdk)
         versionCode = 1
-        versionName = getLibraryVersion()
+        versionName = rootProject.version.toString()
     }
 
     signingConfigs {
@@ -41,13 +41,13 @@ configure<AppExtension> {
 }
 
 dependencies {
-    implementation(Libs.appcompat)
+    implementation("androidx.appcompat:appcompat:1.2.0")
 
     // Enable with -PremoteArtifacts
     // See https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties
     val remoteArtifacts: Boolean? by project
     if (remoteArtifacts == true) {
-        implementation(group = Publish.group, name = Publish.artifactId, version = getLibraryVersion())
+        implementation(group = Publish.group, name = Publish.artifactId, version = rootProject.version.toString())
     } else {
         implementation(project(":library"))
     }

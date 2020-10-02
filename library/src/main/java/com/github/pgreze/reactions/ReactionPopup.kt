@@ -35,8 +35,12 @@ class ReactionPopup @JvmOverloads constructor(
 
             it.reactionSelectedListener = reactionSelectedListener
 
+            // Just add the view,
+            // it will position itself depending on the display preference.
             rootView.addView(it)
-        }.also { it.dismissListener = ::dismiss }
+
+            it.dismissListener = ::dismiss
+        }
     }
 
     init {

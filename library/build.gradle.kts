@@ -28,14 +28,14 @@ configure<LibraryExtension> {
 }
 
 dependencies {
-    api(Libs.kotlin)
-    api(Libs.core)
+    api(kotlin("stdlib-jdk7"))
+    api("androidx.core:core-ktx:1.3.2")
 }
 
 // Maven publishing
 
 group = Publish.group
-version = getLibraryVersion()
+version = System.getenv("BITRISE_GIT_TAG")?.trimStart('v') ?: "WIP"
 
 val androidSourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
