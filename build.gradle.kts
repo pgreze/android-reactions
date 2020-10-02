@@ -16,4 +16,7 @@ allprojects {
         jcenter()
         maven(url = "https://dl.bintray.com/pgreze/maven")
     }
+
+    group = Publish.group
+    version = Publish.version
 }

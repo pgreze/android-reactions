@@ -34,9 +34,6 @@ dependencies {
 
 // Maven publishing
 
-group = Publish.group
-version = System.getenv("BITRISE_GIT_TAG")?.trimStart('v') ?: "WIP"
-
 val androidSourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(android.sourceSets.getByName("main").java.srcDirs)
@@ -58,7 +55,7 @@ afterEvaluate {
                             url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
                         }
                     }
-                    scm { url.set(Publish.url) }
+                    scm { url.set(Publish.githubUrl) }
 
                     addDependencies()
                 }
@@ -114,8 +111,8 @@ extensions.configure<BintrayExtension>("bintray") {
         repo = "maven"
         name = "android-reactions"
         desc = "A Facebook like reactions picker for Android"
-        websiteUrl = Publish.url
-        vcsUrl = "${Publish.url}.git"
+        websiteUrl = Publish.githubUrl
+        vcsUrl = "${Publish.githubUrl}.git"
         setLicenses("Apache-2.0")
         publish = true
         publicDownloadNumbers = true
