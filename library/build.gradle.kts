@@ -8,6 +8,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     `maven-publish`
+    id("org.jetbrains.dokka") version "0.10.1"
 }
 
 configure<LibraryExtension> {
@@ -124,6 +125,26 @@ extensions.configure<BintrayExtension>("bintray") {
                 // The passphrase for GPG signing (optional)
                 passphrase = local.propOrEnv("bintray.gpg.password", "BINTRAY_GPG_PASSWORD")
             }
+        }
+    }
+}
+
+//
+// Dokka
+//
+
+val tagVersion: String? by extra
+
+tasks.dokka {
+    outputFormat = "html"
+    outputDirectory = "$buildDir/dokka"
+    configuration {
+        moduleName = Publish.artifactId
+        sourceLink {
+            // URL showing where the source code can be accessed through the web browser
+            url = "${Publish.githubUrl}/tree/${tagVersion ?: "master"}/"
+            // Suffix which is used to append the line number to the URL. Use #L for GitHub
+            lineSuffix = "#L"
         }
     }
 }
