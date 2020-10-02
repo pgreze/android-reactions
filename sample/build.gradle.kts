@@ -13,7 +13,7 @@ configure<AppExtension> {
         minSdkVersion(Config.minSdk)
         targetSdkVersion(Config.targetSdk)
         versionCode = 1
-        versionName = rootProject.version.toString()
+        versionName = Publish.version
     }
 
     signingConfigs {
@@ -47,7 +47,7 @@ dependencies {
     // See https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties
     val remoteArtifacts: Boolean? by project
     if (remoteArtifacts == true) {
-        implementation(group = Publish.group, name = Publish.artifactId, version = rootProject.version.toString())
+        implementation(group = Publish.group, name = Publish.artifactId, version = Publish.version)
     } else {
         implementation(project(":library"))
     }
