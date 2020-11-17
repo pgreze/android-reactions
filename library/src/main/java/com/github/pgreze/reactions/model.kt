@@ -44,7 +44,9 @@ data class ReactionsConfig(
     @ColorInt val textColor: Int,
     val textHorizontalPadding: Int,
     val textVerticalPadding: Int,
-    val textSize: Float
+    val textSize: Float,
+    val popupAlphaValue: Int,
+    val cornerSizeInDp: Number
 )
 
 private val NO_TEXT_PROVIDER: ReactionTextProvider = { _ -> null }
@@ -108,6 +110,10 @@ class ReactionsConfigBuilder(val context: Context) {
     var textVerticalPadding: Int = 0
 
     var textSize: Float = 0f
+
+    var popupAlphaValue: Int = 230
+
+    var cornerSizeInDp: Number = 8
 
     // Builder pattern for Java
 
@@ -175,6 +181,14 @@ class ReactionsConfigBuilder(val context: Context) {
         this.textSize = textSize
     }
 
+    fun withPopupAlphaValue(popupAlphaValue: Int) = this.also {
+        this.popupAlphaValue = popupAlphaValue
+    }
+
+    fun withCornerSizeInDp(cornerSizeInDp: Number) = this.also {
+        this.cornerSizeInDp = cornerSizeInDp
+    }
+
     fun build() = ReactionsConfig(
         reactions = reactions.takeIf { it.isNotEmpty() }
             ?: throw IllegalArgumentException("Empty reactions"),
@@ -193,6 +207,8 @@ class ReactionsConfigBuilder(val context: Context) {
         textVerticalPadding = textVerticalPadding.takeIf { it != 0 }
             ?: context.resources.getDimension(R.dimen.reactions_text_vertical_padding).roundToInt(),
         textSize = textSize.takeIf { it != 0f }
-            ?: context.resources.getDimension(R.dimen.reactions_text_size)
+            ?: context.resources.getDimension(R.dimen.reactions_text_size),
+            popupAlphaValue = popupAlphaValue,
+            cornerSizeInDp = cornerSizeInDp
     )
 }

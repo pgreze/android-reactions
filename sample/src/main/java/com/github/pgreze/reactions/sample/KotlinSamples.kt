@@ -38,6 +38,8 @@ fun MainActivity.setup() {
         reactionSize = size
         horizontalMargin = margin
         verticalMargin = horizontalMargin / 2
+        popupAlphaValue = 255
+        cornerSizeInDp = 40
     }
     // Setter also available
     popup1.reactionSelectedListener = { position ->
@@ -68,6 +70,7 @@ fun MainActivity.setup() {
         textHorizontalPadding = 0
         textVerticalPadding = 0
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14f, resources.displayMetrics)
+        popupAlphaValue = 255
     }
     val popup2 = ReactionPopup(this, config) { position -> true.also {
         toast("$position selected")
