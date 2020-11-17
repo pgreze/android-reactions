@@ -118,6 +118,15 @@ val popup = reactionPopup(this, ::onReactionSelected) {
     textColor = Color.BLACK
     textHorizontalPadding = resources.getDimension(R.dimen.text_padding)
     textVerticalPadding = resources.getDimension(R.dimen.text_padding)
+	// Applying the popup rounded corners radius in density pixels
+	cornerSizeInDp = 8
+	/*
+	* Applying popup background alpha value
+	* Value must be in between 0 to 255 where
+	* 0 - Transparent (100% Transparency)
+	* 255 - Opaque (0% Transparency)
+	*/
+	popupAlphaValue = 255
 }
 ```
 
@@ -152,6 +161,15 @@ Java:
 .withTextVerticalPadding(0)
 // Text size (default: 8sp)
 .withTextSize(getResources().getDimension(R.dimen.text_size))
+// Applying the popup rounded corners radius in density pixels
+.withCornerSizeInDp(8)
+/*
+* Applying popup background alpha value
+* Value must be in between 0 to 255 where
+* 0 - Transparent (100% Transparency)
+* 255 - Opaque (0% Transparency)
+*/
+.withPopupAlphaValue(255)
 ```
 
 # Credits
