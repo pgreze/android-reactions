@@ -20,14 +20,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sample1();
-        sample2();
-        sample3();
-
-        KotlinSamplesKt.setup(this);
+        sampleCenterLeft();
+        sampleTopLeft();
+        sampleBottomLeft();
+        KotlinSamplesKt.setupTopRight(this);
+        KotlinSamplesKt.setupRight(this);
     }
 
-    private void sample1() {
+    private void sampleCenterLeft() {
         ReactionPopup popup = new ReactionPopup(
                 this,
                 new ReactionsConfigBuilder(this)
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.facebook_btn).setOnTouchListener(popup);
     }
 
-    private void sample2() {
+    private void sampleTopLeft() {
         ReactionPopup popup = new ReactionPopup(
                 this,
                 new ReactionsConfigBuilder(this)
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                                 R.drawable.ic_fb_love,
                                 R.drawable.ic_fb_laugh,
                         })
+                        .withPopupAlpha(20)
                         .withReactionTexts(position -> strings[position])
                         .withTextBackground(new ColorDrawable(Color.TRANSPARENT))
                         .withTextColor(Color.BLACK)
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.top_btn).setOnTouchListener(popup);
     }
 
-    private void sample3() {
+    private void sampleBottomLeft() {
         int margin = getResources().getDimensionPixelSize(R.dimen.crypto_item_margin);
 
         ReactionPopup popup = new ReactionPopup(this, new ReactionsConfigBuilder(this)
@@ -98,6 +99,6 @@ public class MainActivity extends AppCompatActivity {
             return position != 3;
         });
 
-        findViewById(R.id.crypto_btn).setOnTouchListener(popup);
+        findViewById(R.id.crypto_bottom_left).setOnTouchListener(popup);
     }
 }

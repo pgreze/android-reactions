@@ -3,11 +3,12 @@ package com.github.pgreze.reactions
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.widget.ImageView
 import androidx.annotation.ArrayRes
 import androidx.annotation.ColorInt
+import androidx.annotation.IntRange
 import androidx.annotation.Px
 import androidx.core.content.ContextCompat
-import android.widget.ImageView
 import kotlin.math.roundToInt
 
 /**
@@ -34,19 +35,21 @@ data class ReactionsConfig(
     @Px val reactionSize: Int,
     @Px val horizontalMargin: Int,
     @Px val verticalMargin: Int,
+
     /** Horizontal gravity compare to parent view or screen */
     val popupGravity: PopupGravity,
     /** Margin between dialog and screen border used by [PopupGravity] screen related values. */
     val popupMargin: Int,
+    val popupCornerRadius: Int,
     @ColorInt val popupColor: Int,
+    @IntRange(from = 0, to = 255) val popupAlphaValue: Int,
+
     val reactionTextProvider: ReactionTextProvider,
     val textBackground: Drawable,
     @ColorInt val textColor: Int,
     val textHorizontalPadding: Int,
     val textVerticalPadding: Int,
-    val textSize: Float,
-    val popupAlphaValue: Int,
-    val cornerSizeInDp: Number
+    val textSize: Float
 )
 
 private val NO_TEXT_PROVIDER: ReactionTextProvider = { _ -> null }
@@ -91,8 +94,12 @@ class ReactionsConfigBuilder(val context: Context) {
 
     var popupMargin: Int = horizontalMargin
 
+    var popupCornerRadius: Int = 90
+
     @ColorInt
     var popupColor: Int = Color.WHITE
+
+    var popupAlpha: Int = 230
 
     var reactionTextProvider: ReactionTextProvider = NO_TEXT_PROVIDER
 
@@ -110,10 +117,6 @@ class ReactionsConfigBuilder(val context: Context) {
     var textVerticalPadding: Int = 0
 
     var textSize: Float = 0f
-
-    var popupAlphaValue: Int = 230
-
-    var cornerSizeInDp: Number = 8
 
     // Builder pattern for Java
 
@@ -157,8 +160,16 @@ class ReactionsConfigBuilder(val context: Context) {
         this.popupMargin = popupMargin
     }
 
+    fun withPopupCornerRadius(popupCornerRadius: Int) = this.also {
+        this.popupCornerRadius = popupCornerRadius
+    }
+
     fun withPopupColor(@ColorInt popupColor: Int) = this.also {
         this.popupColor = popupColor
+    }
+
+    fun withPopupAlpha(@IntRange(from = 0, to = 255) popupAlpha: Int) = this.also {
+        this.popupAlpha = popupAlpha
     }
 
     fun withTextBackground(textBackground: Drawable) = this.also {
@@ -181,20 +192,14 @@ class ReactionsConfigBuilder(val context: Context) {
         this.textSize = textSize
     }
 
-    fun withPopupAlphaValue(popupAlphaValue: Int) = this.also {
-        this.popupAlphaValue = popupAlphaValue
-    }
-
-    fun withCornerSizeInDp(cornerSizeInDp: Number) = this.also {
-        this.cornerSizeInDp = cornerSizeInDp
-    }
-
     fun build() = ReactionsConfig(
         reactions = reactions.takeIf { it.isNotEmpty() }
             ?: throw IllegalArgumentException("Empty reactions"),
         popupGravity = popupGravity,
         popupMargin = popupMargin,
+        popupCornerRadius = popupCornerRadius,
         popupColor = popupColor,
+        popupAlphaValue = popupAlpha,
         reactionSize = reactionSize,
         horizontalMargin = horizontalMargin,
         verticalMargin = verticalMargin,
@@ -207,8 +212,6 @@ class ReactionsConfigBuilder(val context: Context) {
         textVerticalPadding = textVerticalPadding.takeIf { it != 0 }
             ?: context.resources.getDimension(R.dimen.reactions_text_vertical_padding).roundToInt(),
         textSize = textSize.takeIf { it != 0f }
-            ?: context.resources.getDimension(R.dimen.reactions_text_size),
-            popupAlphaValue = popupAlphaValue,
-            cornerSizeInDp = cornerSizeInDp
+            ?: context.resources.getDimension(R.dimen.reactions_text_size)
     )
 }

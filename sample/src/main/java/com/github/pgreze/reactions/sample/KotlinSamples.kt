@@ -15,10 +15,7 @@ import com.github.pgreze.reactions.dsl.reactionConfig
 import com.github.pgreze.reactions.dsl.reactionPopup
 import com.github.pgreze.reactions.dsl.reactions
 
-fun MainActivity.setup() {
-    val size = resources.getDimensionPixelSize(R.dimen.crypto_item_size)
-    val margin = resources.getDimensionPixelSize(R.dimen.crypto_item_margin)
-
+fun MainActivity.setupTopRight() {
     // Popup DSL + listener via function
     val popup1 = reactionPopup(this, ::onReactionSelected) {
         reactions {
@@ -34,12 +31,12 @@ fun MainActivity.setup() {
             drawable { drawable(R.drawable.ic_crypto_zec) }
         }
         reactionTexts = R.array.crypto_symbols
+        popupCornerRadius = 40
         popupColor = Color.LTGRAY
-        reactionSize = size
-        horizontalMargin = margin
+        popupAlpha = 255
+        reactionSize = resources.getDimensionPixelSize(R.dimen.crypto_item_size)
+        horizontalMargin = resources.getDimensionPixelSize(R.dimen.crypto_item_margin)
         verticalMargin = horizontalMargin / 2
-        popupAlphaValue = 255
-        cornerSizeInDp = 40
     }
     // Setter also available
     popup1.reactionSelectedListener = { position ->
@@ -47,7 +44,9 @@ fun MainActivity.setup() {
         true
     }
     findViewById<View>(R.id.top_right_btn).setOnTouchListener(popup1)
+}
 
+fun MainActivity.setupRight() {
     // Config DSL + listener in popup constructor
     val config = reactionConfig(this) {
         reactionsIds = intArrayOf(
@@ -70,7 +69,7 @@ fun MainActivity.setup() {
         textHorizontalPadding = 0
         textVerticalPadding = 0
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14f, resources.displayMetrics)
-        popupAlphaValue = 255
+        popupAlpha = 255
     }
     val popup2 = ReactionPopup(this, config) { position -> true.also {
         toast("$position selected")

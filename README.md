@@ -102,10 +102,14 @@ val popup = reactionPopup(this, ::onReactionSelected) {
     // Alternative with drawable resource id array
     reactionsIds = intArrayOf(R.drawable.img1, R.drawable.img2, R.drawable.img3)
 
-    // Optional popup/item styles
+    // Optional popup style
     popupGravity = PopupGravity.DEFAULT
     popupMargin = resources.getDimensionPixelSize(R.dimen.horizontal_margin)
+    popupCornerRadius = TypedValue.applyDimension(COMPLEX_UNIT_DIP, cornerSizeInDp.toFloat(), resources.displayMetrics)
     popupColor = Color.WHITE
+    popupAlphaValue = 230
+
+    // Optional item style
     reactionSize = resources.getDimensionPixelSize(R.dimen.item_size)
     horizontalMargin = resources.getDimensionPixelSize(R.dimen.item_margin)
     verticalMargin = resources.getDimensionPixelSize(R.dimen.item_margin)
@@ -118,15 +122,6 @@ val popup = reactionPopup(this, ::onReactionSelected) {
     textColor = Color.BLACK
     textHorizontalPadding = resources.getDimension(R.dimen.text_padding)
     textVerticalPadding = resources.getDimension(R.dimen.text_padding)
-	// Applying the popup rounded corners radius in density pixels
-	cornerSizeInDp = 8
-	/*
-	* Applying popup background alpha value
-	* Value must be in between 0 to 255 where
-	* 0 - Transparent (100% Transparency)
-	* 255 - Opaque (0% Transparency)
-	*/
-	popupAlphaValue = 255
 }
 ```
 
@@ -145,9 +140,14 @@ Java:
 .withVerticalReactionMargin(margin / 2)
 // Override popup gravity
 .withPopupGravity(PopupGravity.PARENT_RIGHT)
+// Margin between items (default: R.dimen.reactions_item_margin)
 .withPopupMargin(margin)
+// Popup corners radius (default: 90)
+.withCornerRadius(getResources().getDimensionPixelSize(R.dimen.corner_radius))
 // Change popup color (default: white)
 .withPopupColor(Color.LTGRAY)
+// Popup background alpha value between 0 (full transparent) and 255 (full opaque) (default: 230)
+.withPopupAlphaValue(255)
 // Item text provider / string array (default: no texts)
 .withReactionTexts(position -> descriptions[position])
 .withReactionTexts(R.array.descriptions)
@@ -161,15 +161,6 @@ Java:
 .withTextVerticalPadding(0)
 // Text size (default: 8sp)
 .withTextSize(getResources().getDimension(R.dimen.text_size))
-// Applying the popup rounded corners radius in density pixels
-.withCornerSizeInDp(8)
-/*
-* Applying popup background alpha value
-* Value must be in between 0 to 255 where
-* 0 - Transparent (100% Transparency)
-* 255 - Opaque (0% Transparency)
-*/
-.withPopupAlphaValue(255)
 ```
 
 # Credits
