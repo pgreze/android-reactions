@@ -15,10 +15,7 @@ import com.github.pgreze.reactions.dsl.reactionConfig
 import com.github.pgreze.reactions.dsl.reactionPopup
 import com.github.pgreze.reactions.dsl.reactions
 
-fun MainActivity.setup() {
-    val size = resources.getDimensionPixelSize(R.dimen.crypto_item_size)
-    val margin = resources.getDimensionPixelSize(R.dimen.crypto_item_margin)
-
+fun MainActivity.setupTopRight() {
     // Popup DSL + listener via function
     val popup1 = reactionPopup(this, ::onReactionSelected) {
         reactions {
@@ -37,8 +34,8 @@ fun MainActivity.setup() {
         popupCornerRadius = 40
         popupColor = Color.LTGRAY
         popupAlpha = 255
-        reactionSize = size
-        horizontalMargin = margin
+        reactionSize = resources.getDimensionPixelSize(R.dimen.crypto_item_size)
+        horizontalMargin = resources.getDimensionPixelSize(R.dimen.crypto_item_margin)
         verticalMargin = horizontalMargin / 2
     }
     // Setter also available
@@ -47,7 +44,9 @@ fun MainActivity.setup() {
         true
     }
     findViewById<View>(R.id.top_right_btn).setOnTouchListener(popup1)
+}
 
+fun MainActivity.setupRight() {
     // Config DSL + listener in popup constructor
     val config = reactionConfig(this) {
         reactionsIds = intArrayOf(
