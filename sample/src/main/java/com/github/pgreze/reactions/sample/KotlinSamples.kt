@@ -34,12 +34,12 @@ fun MainActivity.setup() {
             drawable { drawable(R.drawable.ic_crypto_zec) }
         }
         reactionTexts = R.array.crypto_symbols
+        popupCornerRadius = 40
         popupColor = Color.LTGRAY
+        popupAlpha = 255
         reactionSize = size
         horizontalMargin = margin
         verticalMargin = horizontalMargin / 2
-        popupAlphaValue = 255
-        cornerSizeInDp = 40
     }
     // Setter also available
     popup1.reactionSelectedListener = { position ->
@@ -70,7 +70,7 @@ fun MainActivity.setup() {
         textHorizontalPadding = 0
         textVerticalPadding = 0
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14f, resources.displayMetrics)
-        popupAlphaValue = 255
+        popupAlpha = 255
     }
     val popup2 = ReactionPopup(this, config) { position -> true.also {
         toast("$position selected")

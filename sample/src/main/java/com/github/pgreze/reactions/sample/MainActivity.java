@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                                 R.drawable.ic_fb_love,
                                 R.drawable.ic_fb_laugh,
                         })
+                        .withPopupAlpha(20)
                         .withReactionTexts(position -> strings[position])
                         .withTextBackground(new ColorDrawable(Color.TRANSPARENT))
                         .withTextColor(Color.BLACK)
