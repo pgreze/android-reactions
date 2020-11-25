@@ -1,6 +1,6 @@
 # Android reactions
 
-[![Build Status](https://app.bitrise.io/app/d98620d26ebbcf12/status.svg?token=g6EoKo073j2eIQavozsNfQ&branch=master)](https://app.bitrise.io/app/d98620d26ebbcf12)
+[![Build Status](https://github.com/pgreze/android-reactions/workflows/Build/badge.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 An open source and fully customizable implementation of the
