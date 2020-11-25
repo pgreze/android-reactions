@@ -1,6 +1,6 @@
 # Android reactions
 
-[![Build Status](https://github.com/pgreze/android-reactions/workflows/Build/badge.svg)
+[![Build Status](https://github.com/pgreze/android-reactions/workflows/Build/badge.svg)](https://github.com/pgreze/android-reactions/actions?query=workflow%3ABuild)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 An open source and fully customizable implementation of the
