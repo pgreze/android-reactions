@@ -1,5 +1,4 @@
 import com.android.build.gradle.LibraryExtension
-import com.jfrog.bintray.gradle.BintrayExtension
 import groovy.util.Node
 import org.gradle.api.publish.maven.MavenPom
 import java.util.*
@@ -7,8 +6,9 @@ import java.util.*
 plugins {
     id("com.android.library")
     kotlin("android")
-    `maven-publish`
     id("org.jetbrains.dokka") version "0.10.1"
+    `maven-publish`
+    signing
 }
 
 configure<LibraryExtension> {
@@ -33,7 +33,7 @@ dependencies {
     api("androidx.core:core-ktx:1.3.2")
 }
 
-// Maven publishing
+// Publishing
 
 val androidSourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
@@ -42,14 +42,19 @@ val androidSourcesJar by tasks.registering(Jar::class) {
 
 afterEvaluate {
     publishing {
-        publications.invoke {
+        publications {
             create("maven", MavenPublication::class) {
+                groupId = Publish.group
                 artifactId = Publish.artifactId
+                version = Publish.version
 
                 artifact(tasks.getByName("bundleReleaseAar"))
                 artifact(androidSourcesJar.get())
 
                 pom {
+                    name.set(Publish.artifactId)
+                    description.set("A Facebook like reactions picker for Android")
+                    url.set(Publish.githubUrl)
                     licenses {
                         license {
                             name.set("The Apache Software License, Version 2.0")
@@ -57,12 +62,31 @@ afterEvaluate {
                         }
                     }
                     scm { url.set(Publish.githubUrl) }
-
+                    developers {
+                        developer {
+                            id.set("pgreze")
+                            name.set("Pierrick Greze")
+                        }
+                    }
                     addDependencies()
                 }
             }
         }
+        repositories {
+            maven {
+                name = "sonatype"
+                setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                credentials {
+                    username = "${rootProject.ext.get("ossrh.username")}"
+                    password = "${rootProject.ext.get("ossrh.password")}"
+                }
+            }
+        }
     }
+}
+
+signing {
+    sign(publishing.publications)
 }
 
 fun MavenPom.addDependencies() = withXml {
@@ -82,50 +106,6 @@ fun DependencySet.addDependencies(node: Node, scope: String) = forEach {
         appendNode("artifactId", it.name)
         appendNode("version", it.version)
         appendNode("scope", scope)
-    }
-}
-
-//
-// Bintray Publishing
-//
-// https://github.com/codepath/android_guides/wiki/Building-your-own-Android-library
-// https://inthecheesefactory.com/blog/how-to-upload-library-to-jcenter-maven-central-as-dependency
-//
-
-apply {
-    plugin("com.jfrog.bintray")
-}
-
-val local = project.rootProject.file("local.properties")
-    .takeIf { it.exists() }
-    ?.toProperties()
-    ?: Properties() // Allows CI to run without local.properties
-
-// Notice: extensions.configure is the long version of "bintray" not generated correctly
-extensions.configure<BintrayExtension>("bintray") {
-    user = local.propOrEnv("bintray.user", "BINTRAY_USER")
-    key = local.propOrEnv("bintray.apikey", "BINTRAY_API_KEY")
-
-    setPublications("maven")
-
-    pkg.apply {
-        repo = "maven"
-        name = "android-reactions"
-        desc = "A Facebook like reactions picker for Android"
-        websiteUrl = Publish.githubUrl
-        vcsUrl = "${Publish.githubUrl}.git"
-        setLicenses("Apache-2.0")
-        publish = true
-        publicDownloadNumbers = true
-        version.apply {
-            desc = pkg.desc
-            gpg.apply {
-                // Determines whether to GPG sign the files (default: false)
-                sign = true
-                // The passphrase for GPG signing (optional)
-                passphrase = local.propOrEnv("bintray.gpg.password", "BINTRAY_GPG_PASSWORD")
-            }
-        }
     }
 }
 
