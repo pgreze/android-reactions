@@ -10,7 +10,7 @@ An open source and fully customizable implementation of the
   <img src="https://raw.githubusercontent.com/pgreze/android-reactions/master/resources/demo.gif" alt="Demo">
 </p>
 
-# Installation [![jcenter](https://api.bintray.com/packages/pgreze/maven/android-reactions/images/download.svg)](https://bintray.com/pgreze/maven/android-reactions/_latestVersion)
+# Installation [![central](https://maven-badges.herokuapp.com/maven-central/com.github.pgreze/android-reactions/badge.svg?style={style})](https://search.maven.org/artifact/com.github.pgreze/android-reactions)
 
 ```groovy
 repositories {
@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    // Check the mavenCentral badge for latestVersion 🔝
+    // Check the maven central badge for latestVersion 🔝
     implementation "com.github.pgreze:android-reactions:$latestVersion"
 }
 ```
