@@ -35,26 +35,6 @@ dependencies {
 
 // Publishing
 
-val local = project.rootProject.file("local.properties")
-    .takeIf(File::exists)
-    ?.toProperties()
-    ?: Properties() // Optional with CI
-
-// Inject signing config
-mapOf(
-    "signing.keyId" to "SIGNING_KEY_ID",
-    "signing.password" to "SIGNING_PASSWORD",
-    "signing.secretKeyRingFile" to "SIGNING_SECRET_KEY_RING_FILE"
-).forEach {  (key, envName) ->
-    val value = local.propOrEnv(key, envName)
-        .let {
-            if (key.contains("File")) {
-                project.rootProject.file(it).absolutePath
-            } else it
-        }
-    ext.set(key, value)
-}
-
 val androidSourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(android.sourceSets.getByName("main").java.srcDirs)
@@ -97,8 +77,8 @@ afterEvaluate {
                 name = "sonatype"
                 setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
-                    username = local.propOrEnv("ossrh.username", "OSSRH_USERNAME")
-                    password = local.propOrEnv("ossrh.password", "OSSRH_PASSWORD")
+                    username = "${rootProject.ext.get("ossrh.username")}"
+                    password = "${rootProject.ext.get("ossrh.password")}"
                 }
             }
         }
