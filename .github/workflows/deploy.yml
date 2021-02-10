@@ -41,7 +41,7 @@ jobs:
           SIGNING_SECRET_KEY_RING_CONTENT: ${{ secrets.SIGNING_SECRET_KEY_RING_CONTENT }}
         run: |
           export SIGNING_SECRET_KEY_RING_FILE=secret-key.gpg
-          echo $SIGNING_SECRET_KEY_RING_CONTENT | base64 --decode > $SIGNING_SECRET_KEY_RING_FILE
+          echo $SIGNING_SECRET_KEY_RING_CONTENT | base64 -di > $SIGNING_SECRET_KEY_RING_FILE
           ./gradlew library:assembleRelease library:publishMavenPublicationToSonatypeRepository
           ./gradlew :closeAndReleaseRepository
       # Documentation
