@@ -14,11 +14,11 @@ An open source and fully customizable implementation of the
 
 ```groovy
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    // Check jcenter badge for latestVersion 🔝
+    // Check the mavenCentral badge for latestVersion 🔝
     implementation "com.github.pgreze:android-reactions:$latestVersion"
 }
 ```

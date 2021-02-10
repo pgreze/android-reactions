@@ -32,12 +32,17 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: ${{ runner.os }}-gradle
       # Publish
-      - name: Publish to https://bintray.com/pgreze/maven
+      - name: Publish to Maven Central
         env:
-          BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
-          BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
-          BINTRAY_GPG_PASSWORD: ${{ secrets.BINTRAY_GPG_PASSWORD }}
-        run: ./gradlew library:bintrayUpload
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          SIGNING_SECRET_KEY_RING_CONTENT: ${{ secrets.SIGNING_SECRET_KEY_RING_CONTENT }}
+        run: |
+          export SIGNING_SECRET_KEY_RING_FILE=secret-key.gpg
+          echo $SIGNING_SECRET_KEY_RING_CONTENT | base64 --decode > $SIGNING_SECRET_KEY_RING_FILE
+          ./gradlew library:assembleRelease library:publishMavenPublicationToSonatypeRepository
       # Documentation
       - name: Generate Dokka
         run: ./gradlew library:dokka
