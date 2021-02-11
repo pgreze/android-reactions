@@ -1,7 +1,4 @@
-# Android reactions
-
-[![Build Status](https://github.com/pgreze/android-reactions/workflows/Build/badge.svg)](https://github.com/pgreze/android-reactions/actions?query=workflow%3ABuild)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+# Android reactions [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://github.com/pgreze/android-reactions/workflows/Build/badge.svg)](https://github.com/pgreze/android-reactions/actions?query=workflow%3ABuild)
 
 An open source and fully customizable implementation of the
 [Facebook reactions](https://en.facebookbrand.com/assets/reactions) pattern.
@@ -18,12 +15,12 @@ repositories {
 }
 
 dependencies {
-    // Check the maven central badge for latestVersion 🔝
-    implementation "com.github.pgreze:android-reactions:$latestVersion"
+    // Check the 🔝 maven central badge 🔝 for latest $version
+    implementation "com.github.pgreze:android-reactions:$version"
 }
 ```
 
-# Usage
+# Usage [![](https://img.shields.io/badge/dokka-read-blue)](https://android-reactions.netlify.app/)
 
 See [Java](sample/src/main/java/com/github/pgreze/reactions/sample/MainActivity.java)
 or [Kotlin](sample/src/main/java/com/github/pgreze/reactions/sample/KotlinSamples.kt) samples.

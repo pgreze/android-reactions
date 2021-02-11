@@ -42,8 +42,8 @@ jobs:
         run: |
           export SIGNING_SECRET_KEY_RING_FILE=secret-key.gpg
           echo $SIGNING_SECRET_KEY_RING_CONTENT | base64 -di > $SIGNING_SECRET_KEY_RING_FILE
-          ./gradlew library:assembleRelease library:publishMavenPublicationToSonatypeRepository
-          ./gradlew :closeAndReleaseRepository
+          ./gradlew assembleRelease
+          ./gradlew --max-workers 1 publishMavenPublicationToSonatypeRepository closeAndReleaseRepository
       # Documentation
       - name: Generate Dokka
         run: ./gradlew library:dokka
