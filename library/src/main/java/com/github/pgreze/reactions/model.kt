@@ -2,6 +2,7 @@ package com.github.pgreze.reactions
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.ArrayRes
@@ -49,7 +50,8 @@ data class ReactionsConfig(
     @ColorInt val textColor: Int,
     val textHorizontalPadding: Int,
     val textVerticalPadding: Int,
-    val textSize: Float
+    val textSize: Float,
+    val typeface: Typeface?
 )
 
 private val NO_TEXT_PROVIDER: ReactionTextProvider = { _ -> null }
@@ -91,6 +93,8 @@ class ReactionsConfigBuilder(val context: Context) {
     @Px var verticalMargin: Int = horizontalMargin
 
     var popupGravity: PopupGravity = PopupGravity.DEFAULT
+
+    var customTypeface: Typeface? = null
 
     var popupMargin: Int = horizontalMargin
 
@@ -192,6 +196,10 @@ class ReactionsConfigBuilder(val context: Context) {
         this.textSize = textSize
     }
 
+    fun withTypeface(typeface: Typeface?) = this.also {
+        this.customTypeface = typeface
+    }
+
     fun build() = ReactionsConfig(
         reactions = reactions.takeIf { it.isNotEmpty() }
             ?: throw IllegalArgumentException("Empty reactions"),
@@ -212,6 +220,7 @@ class ReactionsConfigBuilder(val context: Context) {
         textVerticalPadding = textVerticalPadding.takeIf { it != 0 }
             ?: context.resources.getDimension(R.dimen.reactions_text_vertical_padding).roundToInt(),
         textSize = textSize.takeIf { it != 0f }
-            ?: context.resources.getDimension(R.dimen.reactions_text_size)
+            ?: context.resources.getDimension(R.dimen.reactions_text_size),
+        typeface = customTypeface
     )
 }

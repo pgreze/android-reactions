@@ -72,6 +72,9 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
             .toList()
     private val reactionText: TextView = TextView(context)
             .also {
+                if (config.typeface != null) {
+                        it.typeface = config.typeface
+                }
                 it.textSize = config.textSize
                 it.setTextColor(config.textColor)
                 it.setPadding(
@@ -184,7 +187,7 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         if (reactionText.visibility == View.VISIBLE) {
             reactionText.measure(0, 0)
             val selectedView = (currentState as? ReactionViewState.Selected)?.view ?: return
-            val top = selectedView.top - min(selectedView.layoutParams.size, reactionText.measuredHeight * 2)
+            val top = selectedView.top - min(selectedView.layoutParams.size, reactionText.measuredHeight)
             val bottom = top + reactionText.measuredHeight
             val left = selectedView.left + (selectedView.right - selectedView.left) / 2f - reactionText.measuredWidth / 2f
             val right = left + reactionText.measuredWidth
