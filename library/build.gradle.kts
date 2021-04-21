@@ -30,7 +30,7 @@ configure<LibraryExtension> {
 
 dependencies {
     api(kotlin("stdlib-jdk7"))
-    api("androidx.core:core-ktx:1.3.2")
+    api("androidx.core:core-ktx:_")
 }
 
 // Publishing
