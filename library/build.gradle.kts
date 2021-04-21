@@ -29,8 +29,8 @@ configure<LibraryExtension> {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk7"))
-    api("androidx.core:core-ktx:_")
+    api(Kotlin.stdlib.jdk7)
+    api(AndroidX.core)
 }
 
 // Publishing
