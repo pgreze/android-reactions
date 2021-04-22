@@ -41,7 +41,7 @@ configure<AppExtension> {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation(AndroidX.appCompat)
 
     // Enable with -PremoteArtifacts
     // See https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties

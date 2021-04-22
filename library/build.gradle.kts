@@ -1,12 +1,11 @@
 import com.android.build.gradle.LibraryExtension
 import groovy.util.Node
 import org.gradle.api.publish.maven.MavenPom
-import java.util.*
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("org.jetbrains.dokka") version "0.10.1"
+    id("org.jetbrains.dokka")
     `maven-publish`
     signing
 }
@@ -29,8 +28,8 @@ configure<LibraryExtension> {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk7"))
-    api("androidx.core:core-ktx:1.3.2")
+    api(Kotlin.stdlib.jdk7)
+    api(AndroidX.core)
 }
 
 // Publishing
@@ -109,44 +108,19 @@ fun DependencySet.addDependencies(node: Node, scope: String) = forEach {
     }
 }
 
-//
-// Dokka
-//
-// See https://pgreze.dev/posts/2020-05-28-static-doc-netlify/ for the CSS trick + Github support
-//
-
-val moveCss by tasks.registering {
-    description = "Move style.css in the module folder (distribution friendly)."
-    fun File.rewriteStyleLocations() {
-        readText().replace("../style.css", "style.css")
-            .also { writeText(it) }
-    }
-    fun File.recursivelyRewriteStyleLocations() {
-        list()?.map(this::resolve)?.forEach {
-            if (it.isDirectory) it.recursivelyRewriteStyleLocations() else it.rewriteStyleLocations()
+// https://github.com/Kotlin/dokka
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+    outputDirectory.set(buildDir.resolve("dokka"))
+    dokkaSourceSets {
+        named("main") {
+            moduleName.set(Publish.artifactId)
+            sourceLink {
+                localDirectory.set(file("src/main/kotlin"))
+                // URL showing where the source code can be accessed through the web browser
+                remoteUrl.set(uri("${Publish.githubUrl}/tree/${Publish.tagVersion ?: "master"}/").toURL())
+                // Suffix which is used to append the line number to the URL. Use #L for GitHub
+                remoteLineSuffix.set("#L")
+            }
         }
     }
-    doLast {
-        val dokkaTask = tasks.dokka.get()
-        val dokkaOutputDirectory = file(dokkaTask.outputDirectory)
-        val dokkaSingleModuleFolder = dokkaOutputDirectory.resolve(dokkaTask.configuration.moduleName)
-        dokkaSingleModuleFolder.recursivelyRewriteStyleLocations()
-        dokkaOutputDirectory.resolve("style.css").also {
-            it.renameTo(dokkaSingleModuleFolder.resolve(it.name))
-        }
-    }
-}
-tasks.dokka {
-    outputFormat = "html"
-    outputDirectory = "$buildDir/dokka"
-    configuration {
-        moduleName = Publish.artifactId
-        sourceLink {
-            // URL showing where the source code can be accessed through the web browser
-            url = "${Publish.githubUrl}/tree/${Publish.tagVersion ?: "master"}/"
-            // Suffix which is used to append the line number to the URL. Use #L for GitHub
-            lineSuffix = "#L"
-        }
-    }
-    finalizedBy(moveCss)
 }

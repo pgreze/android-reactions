@@ -5,13 +5,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
+        classpath("com.android.tools.build:gradle:_")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:_")
     }
 }
 
 plugins {
-    id("io.codearte.nexus-staging") version "0.22.0"
+    id("io.codearte.nexus-staging")
 }
 
 allprojects {
