@@ -108,10 +108,6 @@ fun DependencySet.addDependencies(node: Node, scope: String) = forEach {
     }
 }
 
-//
-// Dokka
-//
-
 // https://github.com/Kotlin/dokka
 tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
     outputDirectory.set(buildDir.resolve("dokka"))
@@ -128,26 +124,3 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
         }
     }
 }
-// CSS trick + Github support from https://pgreze.dev/posts/2020-05-28-static-doc-netlify/
-val moveCss by tasks.registering {
-    description = "Move style.css in the module folder (distribution friendly)."
-    fun File.rewriteStyleLocations() {
-        readText().replace("../style.css", "style.css")
-            .also { writeText(it) }
-    }
-    fun File.recursivelyRewriteStyleLocations() {
-        list()?.map(this::resolve)?.forEach {
-            if (it.isDirectory) it.recursivelyRewriteStyleLocations() else it.rewriteStyleLocations()
-        }
-    }
-    doLast {
-        val dokkaTask = tasks.dokkaHtml.get()
-        val dokkaOutputDirectory = dokkaTask.outputDirectory.get()
-        val dokkaSingleModuleFolder = dokkaOutputDirectory.resolve(dokkaTask.moduleName.get())
-        dokkaSingleModuleFolder.recursivelyRewriteStyleLocations()
-        dokkaOutputDirectory.resolve("style.css").also {
-            it.renameTo(dokkaSingleModuleFolder.resolve(it.name))
-        }
-    }
-}
-tasks.dokkaHtml { finalizedBy(moveCss) }
