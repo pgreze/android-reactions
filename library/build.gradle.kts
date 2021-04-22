@@ -1,12 +1,11 @@
 import com.android.build.gradle.LibraryExtension
 import groovy.util.Node
 import org.gradle.api.publish.maven.MavenPom
-import java.util.*
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("org.jetbrains.dokka") version "0.10.1"
+    id("org.jetbrains.dokka")
     `maven-publish`
     signing
 }
