@@ -111,9 +111,24 @@ fun DependencySet.addDependencies(node: Node, scope: String) = forEach {
 //
 // Dokka
 //
-// See https://pgreze.dev/posts/2020-05-28-static-doc-netlify/ for the CSS trick + Github support
-//
 
+// https://github.com/Kotlin/dokka
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+    outputDirectory.set(buildDir.resolve("dokka"))
+    dokkaSourceSets {
+        named("main") {
+            moduleName.set(Publish.artifactId)
+            sourceLink {
+                localDirectory.set(file("src/main/kotlin"))
+                // URL showing where the source code can be accessed through the web browser
+                remoteUrl.set(uri("${Publish.githubUrl}/tree/${Publish.tagVersion ?: "master"}/").toURL())
+                // Suffix which is used to append the line number to the URL. Use #L for GitHub
+                remoteLineSuffix.set("#L")
+            }
+        }
+    }
+}
+// CSS trick + Github support from https://pgreze.dev/posts/2020-05-28-static-doc-netlify/
 val moveCss by tasks.registering {
     description = "Move style.css in the module folder (distribution friendly)."
     fun File.rewriteStyleLocations() {
@@ -126,26 +141,13 @@ val moveCss by tasks.registering {
         }
     }
     doLast {
-        val dokkaTask = tasks.dokka.get()
-        val dokkaOutputDirectory = file(dokkaTask.outputDirectory)
-        val dokkaSingleModuleFolder = dokkaOutputDirectory.resolve(dokkaTask.configuration.moduleName)
+        val dokkaTask = tasks.dokkaHtml.get()
+        val dokkaOutputDirectory = dokkaTask.outputDirectory.get()
+        val dokkaSingleModuleFolder = dokkaOutputDirectory.resolve(dokkaTask.moduleName.get())
         dokkaSingleModuleFolder.recursivelyRewriteStyleLocations()
         dokkaOutputDirectory.resolve("style.css").also {
             it.renameTo(dokkaSingleModuleFolder.resolve(it.name))
         }
     }
 }
-tasks.dokka {
-    outputFormat = "html"
-    outputDirectory = "$buildDir/dokka"
-    configuration {
-        moduleName = Publish.artifactId
-        sourceLink {
-            // URL showing where the source code can be accessed through the web browser
-            url = "${Publish.githubUrl}/tree/${Publish.tagVersion ?: "master"}/"
-            // Suffix which is used to append the line number to the URL. Use #L for GitHub
-            lineSuffix = "#L"
-        }
-    }
-    finalizedBy(moveCss)
-}
+tasks.dokkaHtml { finalizedBy(moveCss) }
