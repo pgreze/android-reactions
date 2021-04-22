@@ -46,7 +46,7 @@ jobs:
           ./gradlew --max-workers 1 publishMavenPublicationToSonatypeRepository closeAndReleaseRepository
       # Documentation
       - name: Generate Dokka
-        run: ./gradlew library:dokka
+        run: ./gradlew library:dokkaHtml
       - name: Publish Dokka
         uses: netlify/actions/cli@master
         with:
