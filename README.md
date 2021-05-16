@@ -7,6 +7,9 @@ An open source and fully customizable implementation of the
   <img src="https://raw.githubusercontent.com/pgreze/android-reactions/master/resources/demo.gif" alt="Demo">
 </p>
 
+⚠️ Disclaimer: this library is in a maintenance mode (I'm not using it anymore) and maybe lacks some features you may want (design UI libraries is hard).
+Feel free to fork it and add your own features, and hopefully open a PR to give back to the community.
+
 # Installation [![central](https://maven-badges.herokuapp.com/maven-central/com.github.pgreze/android-reactions/badge.svg?style={style})](https://search.maven.org/artifact/com.github.pgreze/android-reactions)
 
 ```groovy
