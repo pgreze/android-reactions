@@ -15,25 +15,30 @@ import android.widget.PopupWindow
  * Entry point for reaction popup.
  */
 class ReactionPopup @JvmOverloads constructor(
-        context: Context,
-        reactionsConfig: ReactionsConfig,
-        var reactionSelectedListener: ReactionSelectedListener? = null
+    context: Context,
+    reactionsConfig: ReactionsConfig,
+    var reactionSelectedListener: ReactionSelectedListener? = null,
+    var reactionPopupStateChangeListener: ReactionPopupStateChangeListener? = null
 ) : PopupWindow(context), View.OnTouchListener {
 
     private val rootView = FrameLayout(context).also {
         it.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT)
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
     }
     private val view: ReactionViewGroup by lazy(LazyThreadSafetyMode.NONE) {
         // Lazily inflate content during first display
         ReactionViewGroup(context, reactionsConfig).also {
             it.layoutParams = FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER)
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER
+            )
 
             it.reactionSelectedListener = reactionSelectedListener
+
+            it.reactionPopupStateChangeListener = reactionPopupStateChangeListener
 
             // Just add the view,
             // it will position itself depending on the display preference.
@@ -57,6 +62,7 @@ class ReactionPopup @JvmOverloads constructor(
             // Show fullscreen with button as context provider
             showAtLocation(v, Gravity.NO_GRAVITY, 0, 0)
             view.show(event, v)
+            reactionPopupStateChangeListener?.invoke(true)
         }
         return view.onTouchEvent(event)
     }

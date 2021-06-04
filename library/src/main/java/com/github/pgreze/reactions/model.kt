@@ -26,6 +26,12 @@ typealias ReactionSelectedListener = (position: Int) -> Boolean
  */
 typealias ReactionTextProvider = (position: Int) -> CharSequence?
 
+/**
+ * Popup state change listener
+ * @param isShowing flag denoting reaction pop is being displayed or not
+ */
+typealias ReactionPopupStateChangeListener = (isShowing: Boolean) -> Unit
+
 data class Reaction(
     val image: Drawable,
     val scaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER
@@ -59,14 +65,19 @@ private val NO_TEXT_PROVIDER: ReactionTextProvider = { _ -> null }
 enum class PopupGravity {
     /** Default position, similar to Facebook app. */
     DEFAULT,
+
     /** Align dialog left side with left side of the parent view. */
     PARENT_LEFT,
+
     /** Align dialog right side with right side of the parent view. */
     PARENT_RIGHT,
+
     /** Position dialog on left side of the screen. */
     SCREEN_LEFT,
+
     /** Position dialog on right side of the screen. */
     SCREEN_RIGHT,
+
     /** Position dialog on center of the screen. */
     CENTER
 }
@@ -80,7 +91,9 @@ class ReactionsConfigBuilder(val context: Context) {
     // reactions = listOf(R.drawable.img1, R.drawable.img2, ...)
     var reactionsIds: IntArray
         get() = throw NotImplementedError()
-        set(value) { withReactions(value) }
+        set(value) {
+            withReactions(value)
+        }
 
     @Px
     var reactionSize: Int =
@@ -109,7 +122,9 @@ class ReactionsConfigBuilder(val context: Context) {
 
     var reactionTexts: Int
         get() = throw NotImplementedError()
-        set(@ArrayRes value) { withReactionTexts(value) }
+        set(@ArrayRes value) {
+            withReactionTexts(value)
+        }
 
     var textBackground: Drawable? = null
 
@@ -216,7 +231,8 @@ class ReactionsConfigBuilder(val context: Context) {
             ?: ContextCompat.getDrawable(context, R.drawable.reactions_text_background)!!,
         textColor = textColor,
         textHorizontalPadding = textHorizontalPadding.takeIf { it != 0 }
-            ?: context.resources.getDimension(R.dimen.reactions_text_horizontal_padding).roundToInt(),
+            ?: context.resources.getDimension(R.dimen.reactions_text_horizontal_padding)
+                .roundToInt(),
         textVerticalPadding = textVerticalPadding.takeIf { it != 0 }
             ?: context.resources.getDimension(R.dimen.reactions_text_vertical_padding).roundToInt(),
         textSize = textSize.takeIf { it != 0f }

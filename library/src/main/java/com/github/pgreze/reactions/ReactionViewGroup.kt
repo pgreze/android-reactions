@@ -22,7 +22,8 @@ import kotlin.math.roundToInt
  * and given height and width attributes as match_parent to properly draw the View.
  */
 @SuppressLint("ViewConstructor")
-class ReactionViewGroup(context: Context, private val config: ReactionsConfig) : ViewGroup(context) {
+class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
+    ViewGroup(context) {
 
     private val tag = ReactionViewGroup::class.java.simpleName
 
@@ -63,10 +64,10 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
                 addView(it)
             }
     private val reactions: List<ReactionView> = config.reactions
-            .map {
-                ReactionView(context, it).also {
-                    it.layoutParams = LayoutParams(mediumIconSize, mediumIconSize)
-                    addView(it)
+            .map { reaction ->
+                ReactionView(context, reaction).also { reactionView ->
+                    reactionView.layoutParams = LayoutParams(mediumIconSize, mediumIconSize)
+                    addView(reactionView)
                 }
             }
             .toList()
@@ -118,6 +119,8 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     private var isIgnoringFirstReaction: Boolean = false
 
     var reactionSelectedListener: ReactionSelectedListener? = null
+
+    var reactionPopupStateChangeListener: ReactionPopupStateChangeListener? = null
 
     var dismissListener: (() -> Unit)? = null
 
@@ -265,6 +268,8 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
     }
 
     fun dismiss() {
+        reactionPopupStateChangeListener?.invoke(false)
+
         if (currentState == null) return
 
         currentState = ReactionViewState.Boundary.Disappear(
@@ -301,8 +306,8 @@ class ReactionViewGroup(context: Context, private val config: ReactionsConfig) :
         // TODO: animate selected index if boundary == Disappear
         currentAnimator = ValueAnimator.ofFloat(0f, 1f)
                 .apply {
-                    addUpdateListener {
-                        val progress = it.animatedValue as Float
+                    addUpdateListener { animator ->
+                        val progress = animator.animatedValue as Float
                         val translationY = boundary.path.progressMove(progress).toFloat()
 
                         forEach {
