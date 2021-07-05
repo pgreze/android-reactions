@@ -103,7 +103,8 @@ class ReactionsConfigBuilder(val context: Context) {
     var horizontalMargin: Int =
         context.resources.getDimensionPixelSize(R.dimen.reactions_item_margin)
 
-    @Px var verticalMargin: Int = horizontalMargin
+    @Px
+    var verticalMargin: Int = horizontalMargin
 
     var popupGravity: PopupGravity = PopupGravity.DEFAULT
 

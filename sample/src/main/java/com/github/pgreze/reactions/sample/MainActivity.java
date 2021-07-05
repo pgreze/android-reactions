@@ -3,17 +3,16 @@ package com.github.pgreze.reactions.sample;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String[] strings = {
-        "like", "love", "laugh", "wow", "sad", "angry"
-    };
+    private final String[] strings = {"like", "love", "laugh", "wow", "sad", "angry"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -7,8 +7,8 @@ import android.widget.ImageView
 
 @SuppressLint("ViewConstructor")
 class ReactionView constructor(
-        context: Context,
-        val reaction: Reaction
+    context: Context,
+    val reaction: Reaction
 ) : ImageView(context) {
 
     val location = Point()
